@@ -38,10 +38,10 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - libpng >=1.6.21,<1.7
-    # Uncomment this to compile with gtk2 (not in default or conda-forge)
+    # Uncomment this to compile with gtk2.
+    # Not in default or conda-forge, so need a channel before rerendering (best in anaconda.org is "mw" ATM)
     # This is at the moment a hack to allow *building* using newer gtk2 + libpng
     # Needed as the centos gtk does not play well with conda-forge libpng
-    # In general, we won't need this at runtime as long as system gtk2 is installed
     - gtk2
 
     # ffmpeg support (from conda-forge)
@@ -56,6 +56,11 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - libpng >=1.6.21,<1.7
+    # GTK2
+    # In general, we won't need this at runtime as long as system gtk2 is installed
+    - gtk2
+    # FFMPEG
+    - ffmpeg
 
 test:
     imports:
