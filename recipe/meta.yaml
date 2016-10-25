@@ -10,11 +10,15 @@ source:
   sha256: f00b3c4f42acda07d89031a2ebb5ebe390764a133502c03a511f67b78bbd4fbf
 
   patches:
-    # Fixed: https://github.com/opencv/opencv/blob/master/modules/videoio/src/cap_mjpeg_decoder.cpp#L793
-    - cap_mpjpeg_decoder.patch  # [win]
+    # Safe mutex unlocking for loopb's KeyThread
+    - gtk-safe-mutex-unlock.patch
 
 build:
-    number: 1
+  number: 0
+  skip: true  # [not (linux and py2k)]
+  features:
+    - ffmpeg
+    - gtk2
 
 requirements:
   build:
@@ -25,7 +29,6 @@ requirements:
     # For downloading opencv_contrib
     - curl
     # For applying patches
-    - git                   # [win]
     - cmake
     - numpy x.x
     - hdf5 1.8.17|1.8.17.*  # [unix]
@@ -35,7 +38,14 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - libpng >=1.6.21,<1.7
-    - msinttypes            # [win and py<35]
+    # Uncomment this to compile with gtk2 (not in default or conda-forge)
+    # This is at the moment a hack to allow *building* using newer gtk2 + libpng
+    # Needed as the centos gtk does not play well with conda-forge libpng
+    # In general, we won't need this at runtime as long as system gtk2 is installed
+    - gtk2
+
+    # ffmpeg support (from conda-forge)
+    - ffmpeg
 
   run:
     - python
@@ -55,6 +65,7 @@ test:
     commands:
         # Verify dynamic libraries.
         # "bioinspired", Not working in 3.1.0
+        # TODO Santi: add here the other libraries built for ffmpeg and gtk
         {% set opencv_libs = [
              "xfeatures2d",
              "ximgproc",
@@ -97,9 +108,7 @@ test:
              "videostab"
         ] %}
         {% for each_opencv_lib in opencv_libs %}
-        - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.dylib                        # [osx]
         - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.so                           # [linux]
-        - if not exist %PREFIX%\\Library\\bin\\opencv_{{ each_opencv_lib }}310.dll exit 1  # [win]
         {% endfor %}
 
 about:
@@ -108,7 +117,17 @@ about:
   summary: Computer vision and machine learning software library.
 
 extra:
-  recipe-maintainers:
+  original-recipe-url: https://github.com/conda-forge/opencv-feedstock/tree/c8d7e0bea4c7c298a13b339d81088f0f564becf4
+  original-recipe-maintainers:
     - jakirkham
     - msarahan
     - patricksnape
+  recipe-maintainers:
+    - sdvillal
+
+
+#
+# We could switch to qt, which is maintained (albeit with some problems at the time of writing)
+# in the conda/conda-forge ecosystem. However, loopb event thread (and possibly other stuff)
+# does not work with qt at the moment, even if only using opencv higui.
+#
