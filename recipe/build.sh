@@ -42,7 +42,7 @@ cmake .. -LAH                                                             \
     -DWITH_CUDA=0                                                         \
     -DWITH_OPENCL=0                                                       \
     -DWITH_OPENNI=0                                                       \
-    -DWITH_FFMPEG=0                                                       \
+    -DWITH_FFMPEG=ON                                                       \
     -DWITH_MATLAB=0                                                       \
     -DWITH_VTK=0                                                          \
     -DINSTALL_C_EXAMPLES=0                                                \
