@@ -90,3 +90,9 @@ cmake .. -LAH                                                                   
 
 make -j8
 make install
+
+# This should NOT go into the build.sh script, since otherwise it is not installed in the pristine build env
+#   conda install --yes --channel mw gtk2
+# In fact, conda install should never be invoked in the build script
+# Declare the dependencies in meta.yml, add needed channels in command line or the build script
+# It is a pity there are so many places to coordinate...
