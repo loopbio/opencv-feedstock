@@ -14,13 +14,13 @@ Summary: Computer vision and machine learning software library.
 Installing opencv
 =================
 
-Installing `opencv` from the `sdvillal` channel can be achieved by adding `sdvillal` to your channels with:
+Installing `opencv` from the `loopbio` channel can be achieved by adding `loopbio` to your channels with:
 
 ```
-conda config --add channels sdvillal
+conda config --add channels loopbio
 ```
 
-Once the `sdvillal` channel has been enabled, `opencv` can be installed with:
+Once the `loopbio` channel has been enabled, `opencv` can be installed with:
 
 ```
 conda install opencv
@@ -29,7 +29,7 @@ conda install opencv
 It is possible to list all of the versions of `opencv` available on your platform with:
 
 ```
-conda search opencv --channel sdvillal
+conda search opencv --channel loopbio
 ```
 
 
@@ -43,8 +43,8 @@ Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/sdvillal/opencv/badges/version.svg)](https://anaconda.org/sdvillal/opencv)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/sdvillal/opencv/badges/downloads.svg)](https://anaconda.org/sdvillal/opencv)
+Version: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/version.svg)](https://anaconda.org/loopbio/opencv)
+Downloads: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/downloads.svg)](https://anaconda.org/loopbio/opencv)
 
 
 Updating opencv-feedstock
@@ -55,8 +55,8 @@ package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
-`sdvillal` channel, whereupon the built conda packages will be available for
-everybody to install and use from the `sdvillal` channel.
+`loopbio` channel, whereupon the built conda packages will be available for
+everybody to install and use from the `loopbio` channel.
 Note that all branches in the conda-forge/opencv-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks and branches in the main repository should only be used to

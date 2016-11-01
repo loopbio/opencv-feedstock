@@ -57,12 +57,12 @@ yum install -y libXcursor-devel libXinerama-devel
     export CONDA_PY=27
     set +x
     conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root sdvillal --channel=main || exit 1
+    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
 
     set -x
     export CONDA_NPY=111
     export CONDA_PY=27
     set +x
     conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root sdvillal --channel=main || exit 1
+    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
 EOF
