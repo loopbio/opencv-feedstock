@@ -8,7 +8,6 @@ source:
   fn: opencv-{{ version }}.tar.gz
   url: https://github.com/opencv/opencv/archive/{{ version }}.tar.gz
   sha256: f00b3c4f42acda07d89031a2ebb5ebe390764a133502c03a511f67b78bbd4fbf
-
   patches:
     # Safe mutex unlocking for loopb's KeyThread
     - gtk-safe-mutex-unlock.patch
@@ -58,8 +57,10 @@ requirements:
     - libpng >=1.6.21,<1.7
     # GTK2
     # In general, we won't need this at runtime as long as system gtk2 is installed
+    - loopbio-gtk2
     - gtk2
     # FFMPEG
+    - loopbio-ffmpeg
     - ffmpeg
 
 test:

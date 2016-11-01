@@ -1,6 +1,6 @@
 # Install stuff needed when building with gtk2.
-# N.B. When doing this, the linker gets confused, so don't...
+# N.B. When doing this, the linker gets confused.
 #   yum install -y gtk2-devel
-# This instead makes the linker happy...
+# So don't. This instead makes the linker happy.
 libXcursor-devel
 libXinerama-devel
