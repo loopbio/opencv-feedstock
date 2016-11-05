@@ -1,6 +1,6 @@
 channels:
   sources:
+    - loopbio
     - conda-forge
-    - sdvillal
   targets:
     - [loopbio, main]
