@@ -59,10 +59,10 @@ requirements:
     - libpng >=1.6.21,<1.7
     # GTK2
     # In general, we won't need this at runtime as long as system gtk2 is installed
-    - loopbio-gtk2
+    - gtk2-feature  # TODO: this concrete package should not be a requirement, defeats the purpose of features
     - gtk2
     # FFMPEG
-    - loopbio-ffmpeg
+    - ffmpeg-feature  # TODO: this concrete package should not be a requirement, defeats the purpose of features
     - ffmpeg
 
 test:
@@ -73,7 +73,6 @@ test:
     commands:
         # Verify dynamic libraries.
         # "bioinspired", Not working in 3.1.0
-        # TODO Santi: add here the other libraries built for ffmpeg and gtk
         {% set opencv_libs = [
              "xfeatures2d",
              "ximgproc",
