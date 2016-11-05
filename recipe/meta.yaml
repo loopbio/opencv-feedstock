@@ -15,8 +15,8 @@ source:
     - gtk-safe-mutex-unlock.patch
 
 build:
-  number: 0
-  skip: true  # [not (linux and py2k)]
+  number: 1
+  skip: true  # [not (linux and py2k and np==111)]
   features:
     - ffmpeg
     - gtk2
