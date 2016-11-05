@@ -1,3 +1,5 @@
+# Find our git repo: https://github.com/loopbio/opencv-feedstock
+
 {% set version = "3.1.0" %}
 
 package:
