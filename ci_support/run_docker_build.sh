@@ -14,7 +14,6 @@ config=$(cat <<CONDARC
 
 channels:
  - conda-forge
- - mw
  - sdvillal
  - defaults # As we need conda-build
 
