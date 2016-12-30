@@ -11,6 +11,18 @@ Summary: Computer vision and machine learning software library.
 
 
 
+Current build status
+====================
+
+Linux: [![Circle CI](https://circleci.com/gh/conda-forge/opencv-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/opencv-feedstock)
+OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+
+Current release info
+====================
+Version: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/version.svg)](https://anaconda.org/loopbio/opencv)
+Downloads: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/downloads.svg)](https://anaconda.org/loopbio/opencv)
+
 Installing opencv
 =================
 
@@ -33,18 +45,6 @@ conda search opencv --channel loopbio
 ```
 
 
-
-Current build status
-====================
-
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/opencv-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/opencv-feedstock)
-OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-
-Current release info
-====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/version.svg)](https://anaconda.org/loopbio/opencv)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/downloads.svg)](https://anaconda.org/loopbio/opencv)
 
 
 Updating opencv-feedstock

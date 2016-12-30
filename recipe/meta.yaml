@@ -16,7 +16,7 @@ source:
 
 build:
   number: 1
-  skip: true  # [not (linux and py2k and np==111)]
+  skip: true  # [not (linux and np==111)]
   features:
     - ffmpeg
     - gtk2
