@@ -14,7 +14,7 @@ Summary: Computer vision and machine learning software library.
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/opencv-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/opencv-feedstock)
+Linux: [![Circle CI](https://circleci.com/gh/loopbio/opencv-feedstock.svg?style=shield)](https://circleci.com/gh/loopbio/opencv-feedstock)
 OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
 Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
 
@@ -57,7 +57,7 @@ opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `loopbio` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `loopbio` channel.
-Note that all branches in the conda-forge/opencv-feedstock are
+Note that all branches in the loopbio/opencv-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks and branches in the main repository should only be used to
 build distinct package versions.

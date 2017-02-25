@@ -5,3 +5,6 @@ channels:
     - defaults
   targets:
     - [loopbio, main]
+
+github:
+  user_or_org: 'loopbio'
