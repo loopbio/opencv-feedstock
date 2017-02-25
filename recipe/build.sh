@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-+set +x
+set +x
 SHORT_OS_STR=$(uname -s)
 
 if [ "${SHORT_OS_STR:0:5}" == "Linux" ]; then
