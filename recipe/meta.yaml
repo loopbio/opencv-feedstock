@@ -73,6 +73,7 @@ test:
       - cv2
       - cv2.xfeatures2d
 
+    commands:
         # Verify dynamic libraries on all systems
         {% set opencv_libs = [
             "aruco",
