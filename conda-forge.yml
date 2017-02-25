@@ -2,5 +2,6 @@ channels:
   sources:
     - loopbio
     - conda-forge
+    - defaults
   targets:
     - [loopbio, main]
