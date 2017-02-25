@@ -29,8 +29,6 @@ requirements:
     - openssl 1.0.*         # [unix]
     # For downloading opencv_contrib
     - curl
-    # For applying patches
-    - git
     - cmake
     - numpy x.x
     - hdf5 1.8.17|1.8.17.*  # [unix]

@@ -18,7 +18,10 @@ tar -zxf $PKG_VERSION.tar.gz
 
 # Contrib has patches that need to be applied
 # https://github.com/opencv/opencv_contrib/issues/919
-git apply -p0 $RECIPE_DIR/opencv_contrib_freetype.patch
+patch -p0 <$RECIPE_DIR/opencv_contrib_freetype.patch
+# N.B. using git to patch, as done in the original recipe,
+# is not a good idea, as it fails if the working copy is a submodule
+# (as we do in our "condas-and-dockers" repo)-
 
 mkdir build
 cd build
