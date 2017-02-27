@@ -2,6 +2,7 @@ channels:
   sources:
     - loopbio
     - conda-forge
+    - pkgw-forge
     - defaults
   targets:
     - [loopbio, main]
