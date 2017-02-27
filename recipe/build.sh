@@ -63,7 +63,7 @@ cmake .. -LAH                                                             \
     -DOpenBLAS_INCLUDE_DIR=$PREFIX/include                                \
     -DOpenBLAS_LIB=$PREFIX/lib/libopenblas$SHLIB_EXT                      \
     -DWITH_EIGEN=1                                                        \
-    -DWITH_IPP=0                                                          \
+    -DWITH_IPP=1                                                          \
     -DBUILD_TESTS=0                                                       \
     -DBUILD_DOCS=0                                                        \
     -DBUILD_PERF_TESTS=0                                                  \
