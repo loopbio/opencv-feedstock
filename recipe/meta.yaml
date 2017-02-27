@@ -60,74 +60,75 @@ requirements:
     - harfbuzz 1.3.*        # [unix]
     - libtiff 4.0.*
     - libpng >=1.6.23,<1.7
-    # GTK2
-    # In general, we won't need this at runtime as long as system gtk2 is installed
-    - gtk2-feature    # TODO: this concrete package should not be a requirement, defeats the purpose of features
-    - gtk2
-    # FFMPEG
-    - ffmpeg-feature  # TODO: this concrete package should not be a requirement, defeats the purpose of features
-    - ffmpeg
 
 test:
-    imports:
-      - cv2
-      - cv2.xfeatures2d
+  requires:
+    # GTK2
+    - gtk2-feature
+    - gtk2
+    # FFMPEG
+    - ffmpeg-feature
+    - ffmpeg
 
-    commands:
-        # Verify dynamic libraries on all systems
-        {% set opencv_libs = [
-            "aruco",
-            "bgsegm",
-            "calib3d",
-            "ccalib",
-            "core",
-            "datasets",
-            "dnn",
-            "dpm",
-            "face",
-            "features2d",
-            "flann",
-            "fuzzy",
-            "highgui",
-            "imgcodecs",
-            "imgproc",
-            "line_descriptor",
-            "ml",
-            "objdetect",
-            "optflow",
-            "phase_unwrapping",
-            "photo",
-            "plot",
-            "reg",
-            "rgbd",
-            "saliency",
-            "shape",
-            "stereo",
-            "stitching",
-            "structured_light",
-            "superres",
-            "surface_matching",
-            "text",
-            "tracking",
-            "video",
-            "videoio",
-            "videostab",
-            "xfeatures2d",
-            "ximgproc",
-            "xobjdetect",
-            "xphoto"
-        ] %}
-        {% for each_opencv_lib in opencv_libs %}
-        - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.dylib                        # [osx]
-        - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.so                           # [linux]
-        - if not exist %PREFIX%\\Library\\bin\\opencv_{{ each_opencv_lib }}320.dll exit 1  # [win]
-        {% endfor %}
-        - test -f $PREFIX/lib/libopencv_bioinspired.dylib  # [osx]
-        - test -f $PREFIX/lib/libopencv_bioinspired.so     # [linux]
-        - test -f $PREFIX/lib/libopencv_hdf.dylib          # [osx]
-        - test -f $PREFIX/lib/libopencv_hdf.so             # [linux]
-        - test -f $PREFIX/lib/libopencv_freetype.dylib     # [osx]
-        - test -f $PREFIX/lib/libopencv_freetype.so        # [linux]
+  imports:
+    - cv2
+    - cv2.xfeatures2d
+
+  commands:
+    # Verify dynamic libraries on all systems
+    {% set opencv_libs = [
+      "aruco",
+      "bgsegm",
+      "calib3d",
+      "ccalib",
+      "core",
+      "datasets",
+      "dnn",
+      "dpm",
+      "face",
+      "features2d",
+      "flann",
+      "fuzzy",
+      "highgui",
+      "imgcodecs",
+      "imgproc",
+      "line_descriptor",
+      "ml",
+      "objdetect",
+      "optflow",
+      "phase_unwrapping",
+      "photo",
+      "plot",
+      "reg",
+      "rgbd",
+      "saliency",
+      "shape",
+      "stereo",
+      "stitching",
+      "structured_light",
+      "superres",
+      "surface_matching",
+      "text",
+      "tracking",
+      "video",
+      "videoio",
+      "videostab",
+      "xfeatures2d",
+      "ximgproc",
+      "xobjdetect",
+      "xphoto"
+    ] %}
+    {% for each_opencv_lib in opencv_libs %}
+    - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.dylib                        # [osx]
+    - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}.so                           # [linux]
+    - if not exist %PREFIX%\\Library\\bin\\opencv_{{ each_opencv_lib }}320.dll exit 1  # [win]
+    {% endfor %}
+    - test -f $PREFIX/lib/libopencv_bioinspired.dylib  # [osx]
+    - test -f $PREFIX/lib/libopencv_bioinspired.so     # [linux]
+    - test -f $PREFIX/lib/libopencv_hdf.dylib          # [osx]
+    - test -f $PREFIX/lib/libopencv_hdf.so             # [linux]
+    - test -f $PREFIX/lib/libopencv_freetype.dylib     # [osx]
+    - test -f $PREFIX/lib/libopencv_freetype.so        # [linux]
 
 about:
   home: http://opencv.org/
