@@ -40,14 +40,9 @@ requirements:
     - libwebp 0.5.*
     - harfbuzz 1.3.*        # [unix]
     - libpng >=1.6.23,<1.7
-
-    - gtk2
-    # Needed as the centos gtk does not play well with conda-forge libpng
-    # Not in default or conda-forge, so need a channel before rerendering
-    # This is at the moment a hack to allow *building* using newer gtk2 + libpng
-
-    # ffmpeg support (from conda-forge)
+    # loopb specific needs
     - ffmpeg
+    - gtk2
 
   run:
     - python
@@ -63,10 +58,8 @@ requirements:
 
 test:
   requires:
-    # GTK2
     - gtk2-feature
     - gtk2
-    # FFMPEG
     - ffmpeg-feature
     - ffmpeg
 
@@ -130,6 +123,7 @@ test:
     - test -f $PREFIX/lib/libopencv_freetype.dylib     # [osx]
     - test -f $PREFIX/lib/libopencv_freetype.so        # [linux]
 
+
 about:
   home: http://opencv.org/
   license: BSD 3-clause
@@ -144,10 +138,3 @@ extra:
   recipe-url: https://github.com/loopbio/opencv-feedstock
   recipe-maintainers:
     - sdvillal
-
-
-#
-# We could switch to qt, which is maintained (albeit with some problems at the time of writing)
-# in the conda/conda-forge ecosystem. However, loopb event thread (and possibly other stuff)
-# does not work with qt at the moment, even if only using opencv higui.
-#
