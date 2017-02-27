@@ -123,5 +123,5 @@ cmake .. -LAH                                                             \
     $PYTHON_UNSET_LIB                                                     \
     $PYTHON_UNSET_SP
 
-make -j8
+make -j$CPU_COUNT
 make install
