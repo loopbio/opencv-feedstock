@@ -15,9 +15,6 @@ source:
 build:
   number: 2
   skip: true  # [not (linux and np>=111)]
-  features:
-    - ffmpeg
-    - gtk2
 
 requirements:
   build:
@@ -39,9 +36,6 @@ requirements:
     - libwebp 0.5.*
     - harfbuzz 1.3.*        # [unix]
     - libpng >=1.6.23,<1.7
-    # loopb specific needs
-    - ffmpeg
-    - gtk2
 
   run:
     - python
@@ -57,10 +51,6 @@ requirements:
     - libpng >=1.6.23,<1.7
 
 test:
-  requires:
-    - gtk2
-    - ffmpeg-feature
-    - ffmpeg
 
   imports:
     - cv2
