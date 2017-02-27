@@ -15,7 +15,7 @@ source:
     - gtk-safe-mutex-unlock.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [not (linux and np>=111)]
   features:
     - ffmpeg
@@ -140,6 +140,7 @@ extra:
     - jakirkham
     - msarahan
     - patricksnape
+  recipe-url: https://github.com/loopbio/opencv-feedstock
   recipe-maintainers:
     - sdvillal
 
