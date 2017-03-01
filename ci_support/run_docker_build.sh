@@ -28,11 +28,11 @@ CONDARC
 
 rm -f "$FEEDSTOCK_ROOT/build_artefacts/conda-forge-build-done"
 
-cat << EOF | docker run -i \
+cat << EOF | nvidia-docker run -i \
                         -v "${RECIPE_ROOT}":/recipe_root \
                         -v "${FEEDSTOCK_ROOT}":/feedstock_root \
                         -a stdin -a stdout -a stderr \
-                        condaforge/linux-anvil \
+                        sdvillal/linux-anvil-cudnn \
                         bash || exit 1
 
 export BINSTAR_TOKEN=${BINSTAR_TOKEN}
