@@ -93,7 +93,10 @@ cmake .. -LAH                                                             \
     -DBUILD_PNG=0                                                         \
     -DBUILD_OPENEXR=1                                                     \
     -DBUILD_JASPER=0                                                      \
-    -DBUILD_JPEG=0                                                        \
+    -DWITH_JPEG=ON                                                        \
+    -DBUILD_JPEG=OFF                                                      \
+    -DJPEG_INCLUDE_DIR=$PREFIX/include                                    \
+    -DJPEG_LIBRARY=$PREFIX/lib/libjpeg$SHLIB_EXT                          \
     -DWITH_CUDA=0                                                         \
     -DWITH_OPENCL=0                                                       \
     -DWITH_OPENNI=0                                                       \
