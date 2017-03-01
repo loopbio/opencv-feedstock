@@ -57,6 +57,12 @@ PYTHON_UNSET_SP="-DPYTHON${PY_UNSET_MAJOR}_PACKAGES_PATH="
 export CFLAGS="$CFLAGS -I$PREFIX/include"
 export CXXFLAGS="$CXXFLAGS -I$PREFIX/include"
 
+# TODO: understand better cuda compiling, enable only certain architectures (sm60 sm61), something about cudnn?
+#   http://docs.opencv.org/trunk/d2/dbc/cuda_intro.html
+#   -DCUDA_ARCH_BIN and -DCUDA_ARCH_PTH
+# In any case, I do not know how profitable this is, specially when using only the python bindings
+# And makes the package gigantic (maybe we should just strip all the elfs)
+
 cmake .. -LAH                                                             \
     $OPENMP                                                               \
     -DOpenBLAS=1                                                          \
@@ -97,7 +103,7 @@ cmake .. -LAH                                                             \
     -DBUILD_JPEG=OFF                                                      \
     -DJPEG_INCLUDE_DIR=$PREFIX/include                                    \
     -DJPEG_LIBRARY=$PREFIX/lib/libjpeg$SHLIB_EXT                          \
-    -DWITH_CUDA=0                                                         \
+    -DWITH_CUDA=1                                                         \
     -DWITH_OPENCL=0                                                       \
     -DWITH_OPENNI=0                                                       \
     -DWITH_FFMPEG=1                                                       \
