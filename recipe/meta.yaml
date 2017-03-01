@@ -18,6 +18,7 @@ build:
   features:
     - ffmpeg
     - gtk2
+    - cuda80
 
 requirements:
   build:
@@ -61,6 +62,7 @@ test:
     - gtk2
     - ffmpeg-feature
     - ffmpeg
+    - cuda80-feature
 
   imports:
     - cv2
