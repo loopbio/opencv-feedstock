@@ -14,7 +14,7 @@ Summary: Computer vision and machine learning software library.
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/loopbio/opencv-feedstock.svg?style=shield)](https://circleci.com/gh/loopbio/opencv-feedstock)
+Linux: [![Circle CI](https://circleci.com/gh/loopbio/opencv-gtk2-ffmpeg-feedstock.svg?style=shield)](https://circleci.com/gh/loopbio/opencv-gtk2-ffmpeg-feedstock)
 OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
 Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
 
