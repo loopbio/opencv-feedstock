@@ -58,7 +58,6 @@ requirements:
 
 test:
   requires:
-    - gtk2-feature
     - gtk2
     - ffmpeg-feature
     - ffmpeg
