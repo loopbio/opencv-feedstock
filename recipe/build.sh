@@ -34,7 +34,8 @@ cmake -LAH ..                                                            \
     -DWITH_CUDA=0                                                        \
     -DWITH_OPENCL=0                                                      \
     -DWITH_OPENNI=0                                                      \
-    -DWITH_FFMPEG=0                                                      \
+    -DWITH_FFMPEG=1                                                      \
+    -DWITH_GTK2=1                                                        \
     -DCMAKE_INSTALL_PREFIX=$PREFIX
 
 make

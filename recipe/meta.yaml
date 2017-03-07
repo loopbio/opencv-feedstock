@@ -10,12 +10,13 @@ source:
   url: https://github.com/Itseez/opencv/archive/{{ version }}.zip
   sha1: 0c6e4d890f6252ae8feae0c92f397f63aaa41a08
 
-  patches:
-    - osx_rpath.patch  # [osx]
-
 build:
   number: 0
-  skip: true  # [not py27]
+  skip: true  # [not (linux and py27)]
+  features:
+    # N.B. maybe we need to bring the GTK2 pthreads patch from the opencv 3 recipe
+    - gtk2
+    - ffmpeg
 
 requirements:
   build:
@@ -28,6 +29,8 @@ requirements:
     - jpeg 9*
     - libtiff 4.0.*
     - libpng 1.6*
+    - gtk2
+    - ffmpeg
 
   run:
     - python
@@ -39,6 +42,10 @@ requirements:
     - libpng 1.6*
 
 test:
+  requires:
+    - gtk2
+    - ffmpeg-feature
+    - ffmpeg
   imports:
     - cv2
     - cv2.cv
