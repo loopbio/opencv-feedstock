@@ -45,23 +45,7 @@ conda clean --lock
 conda install --yes --quiet conda-forge-build-setup
 source run_conda_forge_build_setup
 
-# Embarking on 12 case(s).
-    set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=111
-    export CONDA_PY=27
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
-    set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=112
-    export CONDA_PY=27
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
+# Embarking on 6 case(s).
     set -x
     export WITH_CUDA=ON
     export CONDA_NPY=111
@@ -79,22 +63,6 @@ source run_conda_forge_build_setup
     upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
 
     set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=111
-    export CONDA_PY=35
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
-    set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=112
-    export CONDA_PY=35
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
-    set -x
     export WITH_CUDA=ON
     export CONDA_NPY=111
     export CONDA_PY=35
@@ -106,22 +74,6 @@ source run_conda_forge_build_setup
     export WITH_CUDA=ON
     export CONDA_NPY=112
     export CONDA_PY=35
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
-    set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=111
-    export CONDA_PY=36
-    set +x
-    conda build /recipe_root --quiet || exit 1
-    upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1
-
-    set -x
-    export WITH_CUDA=OFF
-    export CONDA_NPY=112
-    export CONDA_PY=36
     set +x
     conda build /recipe_root --quiet || exit 1
     upload_or_check_non_existence /recipe_root loopbio --channel=main || exit 1

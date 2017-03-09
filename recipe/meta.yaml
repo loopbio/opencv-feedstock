@@ -17,6 +17,8 @@ source:
 build:
   number: 0
   skip: true  # [not (linux and np>=111)]
+  script_env:
+    - WITH_CUDA
   features:
     - gtk2
     - ffmpeg
