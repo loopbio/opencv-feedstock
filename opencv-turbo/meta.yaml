@@ -1,0 +1,21 @@
+{% extends "base.yaml" %}
+
+{% block recipe %}
+
+package:
+  name: opencv-turbo
+  version: {{ opencv_version }}
+
+build:
+  number: 0
+  track_features:
+    - opencv_turbo
+
+requirements:
+  run:
+    - gtk2
+    - ffmpeg-feature
+    - opencv {{ opencv_version }}
+    - openblas  # should not be needed... remove when it is not
+
+{% endblock %}

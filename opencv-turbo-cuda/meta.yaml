@@ -1,0 +1,19 @@
+{% extends "base.yaml" %}
+
+{% block recipe %}
+
+package:
+  name: opencv-turbo-cuda
+  version: {{ opencv_version + "_" + cuda_version }}
+
+build:
+  number: 0
+  track_features:
+    - opencv_cuda
+
+requirements:
+  run:
+    - cuda-feature {{ cuda_version }}
+    - opencv-turbo {{ opencv_version }}
+
+{% endblock %}
