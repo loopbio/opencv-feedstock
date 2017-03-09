@@ -8,7 +8,7 @@ popd > /dev/null
 
 localRepoDir="${myDir}/build_artefacts"
 
-logsDir="${myDir}/build_logs"
+logsDir="${localRepoDir}/build_logs"
 mkdir -p "${logsDir}"
 
 cd ${myDir}
