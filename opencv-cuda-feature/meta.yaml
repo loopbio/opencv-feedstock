@@ -1,0 +1,14 @@
+{% extends "base.yaml" %}
+
+{% block recipe %}
+
+package:
+  name: opencv-cuda-feature
+  version: {{ cuda_version }}
+
+build:
+  number: 0
+  track_features:
+    - opencv_cuda
+
+{% endblock %}
