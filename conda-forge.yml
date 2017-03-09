@@ -1,3 +1,7 @@
+matrix:
+  - [[WITH_CUDA, 'ON']]
+  - [[WITH_CUDA, 'OFF']]
+
 channels:
   sources:
     - loopbio
