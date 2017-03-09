@@ -1,0 +1,23 @@
+{% set opencv_version = "3.2.0" %}
+{% set cuda_version = "8.0" %}
+
+{% set blas_variant = "openblas" %}
+
+{% set with_cuda = os.environ.get('WITH_CUDA', 'OFF') %}
+
+{% block recipe %}{% endblock %}
+
+about:
+  home: http://opencv.org/
+  license: BSD 3-clause
+  summary: Computer vision and machine learning software library.
+
+extra:
+  original-recipe-url: https://github.com/conda-forge/opencv-feedstock/tree/c8d7e0bea4c7c298a13b339d81088f0f564becf4
+  original-recipe-maintainers:
+    - jakirkham
+    - msarahan
+    - patricksnape
+  recipe-url: https://github.com/loopbio/opencv-feedstock
+  recipe-maintainers:
+    - sdvillal
