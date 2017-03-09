@@ -67,7 +67,7 @@ test:
     - opencv-turbo-feature {{ opencv_version }}
     {% if with_cuda == 'ON' %}
     - cuda-feature {{ cuda_version }}
-    - opencv-cuda-feature {{ opencv_version + "_" + cuda_version }}
+    - opencv-cuda-feature {{ cuda_version }}
     {% endif %}
 
   imports:
