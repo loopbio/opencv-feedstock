@@ -13,7 +13,7 @@ source:
     - gtk-safe-mutex-unlock.patch
 
 build:
-  number: 3
+  number: 4
   skip: true  # [not (linux and np>=111)]
 
 requirements:
@@ -35,7 +35,7 @@ requirements:
     - libtiff 4.0.*
     - libwebp 0.5.*
     - harfbuzz 1.4.*        # [unix]
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
 
   run:
     - python
@@ -48,7 +48,7 @@ requirements:
     - libwebp 0.5.*
     - harfbuzz 1.4.*        # [unix]
     - libtiff 4.0.*
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
 
 test:
 
