@@ -15,7 +15,7 @@ source:
     - gtk-safe-mutex-unlock.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [not (linux and np>=111)]
   script_env:
     - WITH_CUDA
@@ -46,7 +46,7 @@ requirements:
     - libtiff 4.0.*
     - libwebp 0.5.*
     - harfbuzz 1.4.*        # [unix]
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
     - ffmpeg
     - gtk2
 
@@ -60,7 +60,7 @@ requirements:
     - libwebp 0.5.*
     - harfbuzz 1.4.*        # [unix]
     - libtiff 4.0.*
-    - libpng >=1.6.23,<1.7
+    - libpng >=1.6.28,<1.7
 
 test:
   requires:
