@@ -1,0 +1,12 @@
+name: opencvcuda
+
+channels:
+  - loopbio
+  - conda-forge
+  - pkgw
+  - defaults
+
+dependencies:
+  - python=2.7
+  - numpy
+  - opencv-turbo-cuda
