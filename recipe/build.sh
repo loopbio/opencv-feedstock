@@ -16,12 +16,12 @@ if [ "${SHORT_OS_STR}" == "Darwin" ]; then
 fi
 
 curl -L -O "https://github.com/opencv/opencv_contrib/archive/$PKG_VERSION.tar.gz"
-test `openssl sha256 $PKG_VERSION.tar.gz | awk '{print $2}'` = "1e2bb6c9a41c602904cc7df3f8fb8f98363a88ea564f2a087240483426bf8cbe"
+test `openssl sha256 $PKG_VERSION.tar.gz | awk '{print $2}'` = "e94acf39cd4854c3ef905e06516e5f74f26dddfa6477af89558fb40a57aeb444"
 tar -zxf $PKG_VERSION.tar.gz
 
 # Contrib has patches that need to be applied
 # https://github.com/opencv/opencv_contrib/issues/919
-patch -p0 < $RECIPE_DIR/opencv_contrib_freetype.patch
+# patch -p0 < $RECIPE_DIR/opencv_contrib_freetype.patch
 
 mkdir -p build
 cd build
