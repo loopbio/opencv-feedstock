@@ -20,6 +20,7 @@ source:
 
 build:
   number: 204
+  skip: True  # [not linux or np<113]
   features:                    # [not win]
     - blas_{{ blas_variant }}  # [not win]
 
