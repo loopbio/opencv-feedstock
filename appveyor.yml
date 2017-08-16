@@ -4,9 +4,7 @@
 
 environment:
 
-  BINSTAR_TOKEN:
-    # The BINSTAR_TOKEN secure variable. This is defined canonically in conda-forge.yml.
-    secure: /XxwAsgp0EItmAhoPSov/h0BtAFNj2BuuEqnhgaP9l7Rw2yLBM1lD+3q4LvpVm3B
+  
 
   matrix:
     - TARGET_ARCH: x86
@@ -126,6 +124,7 @@ install:
     - cmd: conda config --remove channels defaults
     - cmd: conda config --add channels defaults
     - cmd: conda config --add channels conda-forge
+    - cmd: conda config --add channels loopbio
 
     # Configure the VM.
     - cmd: conda install -n root --quiet --yes conda-forge-build-setup
@@ -137,4 +136,4 @@ build: off
 test_script:
     - conda build recipe --quiet
 deploy_script:
-    - cmd: upload_or_check_non_existence .\recipe conda-forge --channel=main
+    - cmd: upload_or_check_non_existence .\recipe loopbio --channel=main
