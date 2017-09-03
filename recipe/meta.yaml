@@ -21,7 +21,7 @@ source:
 build:
   number: {{ build_number }}
   skip: True  # [not linux]
-  string: mkl_{{ build_number }}
+  string: np{{np}}py{{py}}_mkl_{{ build_number }}
 
 requirements:
   build:
