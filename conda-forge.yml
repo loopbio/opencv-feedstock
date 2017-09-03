@@ -2,6 +2,8 @@ channels:
   sources:
     - loopbio
     - conda-forge
+    - intel           # This will go as soon as mkl-include (mkl-devel) is on defaults (they are testing it ATM)
+                      # In any case, MKL is just not very useful for our use of MKL (and even less after 3.3)
     - defaults
   targets:
     - [loopbio, main]
