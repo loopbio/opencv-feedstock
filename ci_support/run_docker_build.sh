@@ -15,6 +15,7 @@ config=$(cat <<CONDARC
 channels:
  - loopbio
  - conda-forge
+ - intel
  - defaults
 
 conda-build:
