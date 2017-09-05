@@ -22,7 +22,6 @@ source:
 build:
   number: {{ build_number }}
   skip: True  # [not linux]
-  string: np{{np}}py{{py}}_mkl_{{ build_number }}
   features:                    # [not win]
     - blas_{{ blas_variant }}  # [not win]
 
