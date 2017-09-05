@@ -1,5 +1,5 @@
 {% set version = "3.3.0" %}
-{% set build_number = "2" %}
+{% set build_number = "200" %}
 {% set blas_variant = "openblas" %}
 
 package:
@@ -23,8 +23,6 @@ build:
   number: {{ build_number }}
   skip: True  # [not linux]
   string: np{{np}}py{{py}}_mkl_{{ build_number }}
-  number: 204
-  skip: True  # [not linux or np<113]
   features:                    # [not win]
     - blas_{{ blas_variant }}  # [not win]
 
