@@ -81,7 +81,7 @@ cmake .. -LAH                                                             \
     -DPNG_LIBRARY_RELEASE=$PREFIX/lib/libpng$SHLIB_EXT                    \
     -DPNG_INCLUDE_DIRS=$PREFIX/include                                    \
     -DJPEG_INCLUDE_DIR=$PREFIX/include                                    \
-    -DJPEG_LIBRARY=$PREFIX/lib/libturbojpeg$SHLIB_EXT                     \
+    -DJPEG_LIBRARY=$PREFIX/lib/libjpeg$SHLIB_EXT                          \
     -DTIFF_INCLUDE_DIR=$PREFIX/include                                    \
     -DTIFF_LIBRARY=$PREFIX/lib/libtiff$SHLIB_EXT                          \
     -DJASPER_INCLUDE_DIR=$PREFIX/include                                  \
