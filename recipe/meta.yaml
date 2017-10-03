@@ -127,9 +127,11 @@ about:
   summary: Computer vision and machine learning software library.
 
 extra:
-  recipe-maintainers:
+  upstream-recipe-maintainers:
     - jakirkham
     - msarahan
     - patricksnape
     - zym1010
     - hajapy
+  recipe-maintainers:
+    - sdvillal
