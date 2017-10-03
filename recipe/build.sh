@@ -57,9 +57,6 @@ cmake -LAH                                                                \
     -DCMAKE_INSTALL_PREFIX=${PREFIX}                                      \
     -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
     $OPENMP                                                               \
-    -DOpenBLAS=1                                                          \
-    -DOpenBLAS_INCLUDE_DIR=$PREFIX/include                                \
-    -DOpenBLAS_LIB=$PREFIX/lib/libopenblas$SHLIB_EXT                      \
     -DWITH_EIGEN=1                                                        \
     -DBUILD_TESTS=0                                                       \
     -DBUILD_DOCS=0                                                        \
