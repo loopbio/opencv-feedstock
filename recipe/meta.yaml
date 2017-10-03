@@ -34,7 +34,14 @@ requirements:
     - eigen 3.2.*
     - jasper                       # [unix]
     - zlib 1.2.*
-    - jpeg 9*
+
+    # unlike systems where libjpegturbo is a drop-in replacement for libjpeg,
+    # conda-forge libjpeg-turbo and jpeg packages fight against each other
+    # (conda-forge jpeg is too new: https://libjpeg-turbo.org/About/Jpeg-9).
+    # There is some clobbing going on there as well.
+    # We link statically to libjpeg-turbo (see build.sh).
+    - libjpeg-turbo 1.5*
+
     - libtiff 4.0.*
     - libwebp 0.5.*
     - harfbuzz 1.3.4               # [unix]
@@ -55,7 +62,6 @@ requirements:
     - hdf5 1.8.18|1.8.18.*         # [unix]
     - jasper                       # [unix]
     - zlib 1.2.*
-    - jpeg 9*
     - libwebp 0.5.*
     - harfbuzz 1.3.4               # [unix]
     - libtiff 4.0.*
