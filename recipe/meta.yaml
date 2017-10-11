@@ -13,7 +13,7 @@ source:
 build:
   number: 201
   # Python2.7 support dropped: https://github.com/opencv/opencv/issues/8481
-  skip: true  # [win and py27]
+  skip: true  # [not linux]
   features:                    # [not win]
     - blas_{{ blas_variant }}  # [not win]
 
