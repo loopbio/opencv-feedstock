@@ -35,6 +35,7 @@ requirements:
     - jasper                       # [unix]
     - zlib 1.2.*
 
+    # libjpegturbo
     # unlike systems where libjpegturbo is a drop-in replacement for libjpeg,
     # conda-forge libjpeg-turbo and jpeg packages fight against each other
     # (conda-forge jpeg is too new: https://libjpeg-turbo.org/About/Jpeg-9).
