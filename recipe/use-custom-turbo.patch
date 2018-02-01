@@ -1,0 +1,34 @@
+diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
+index 281b50732..542bd3351 100644
+--- a/modules/imgcodecs/CMakeLists.txt
++++ b/modules/imgcodecs/CMakeLists.txt
+@@ -19,7 +19,15 @@ if(HAVE_PNG OR HAVE_TIFF OR HAVE_OPENEXR)
+ endif()
+ 
+ if(HAVE_JPEG)
+-  ocv_include_directories(${JPEG_INCLUDE_DIR})
++
++  #
++  # This includes the dirs after the system, giving jpeg9 headers priority
++  # See cmake/OpenCVUtils.cmake for the definition of ocv_include_directories
++  #   ocv_include_directories(${JPEG_INCLUDE_DIR})
++  # So instead we force it to have higher priority than system include
++  #
++  include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR})
++
+   list(APPEND GRFMT_LIBS ${JPEG_LIBRARIES})
+ endif()
+ 
+diff --git a/modules/imgcodecs/src/grfmt_jpeg.cpp b/modules/imgcodecs/src/grfmt_jpeg.cpp
+index f53550a0f..d2bd7c2e6 100644
+--- a/modules/imgcodecs/src/grfmt_jpeg.cpp
++++ b/modules/imgcodecs/src/grfmt_jpeg.cpp
+@@ -72,7 +72,7 @@ typedef unsigned char boolean;
+ #undef TRUE
+ 
+ extern "C" {
+-#include "jpeglib.h"
++#include "turbojpeglib.h"
+ }
+ 
+ namespace cv

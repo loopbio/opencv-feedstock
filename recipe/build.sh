@@ -5,10 +5,7 @@ SHORT_OS_STR=$(uname -s)
 
 QT="5"
 if [ "${SHORT_OS_STR:0:5}" == "Linux" ]; then
-    OPENMP="-DWITH_OPENMP=1"
-    # Looks like there's a bug in Opencv 3.2.0 for building with FFMPEG
-    # with GCC opencv/issues/8097
-    export CXXFLAGS="$CXXFLAGS -D__STDC_CONSTANT_MACROS"
+    OPENMP="-DWITH_OPENMP=ON"  # Although hopefully using TBB here
 fi
 if [ "${SHORT_OS_STR}" == "Darwin" ]; then
     OPENMP=""
@@ -53,34 +50,57 @@ PYTHON_UNSET_SP="-DPYTHON${PY_UNSET_MAJOR}_PACKAGES_PATH="
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig
 
 cmake -LAH                                                                \
+    -DCMAKE_RULE_MESSAGES=ON                                              \
+    -DCMAKE_VERBOSE_MAKEFILE=OFF                                          \
     -DCMAKE_BUILD_TYPE="Release"                                          \
-    -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
     -DCMAKE_INSTALL_PREFIX=${PREFIX}                                      \
-    -DCMAKE_INSTALL_LIBDIR="lib"                                          \
-    $OPENMP                                                               \
-    -DOpenBLAS=1                                                          \
-    -DOpenBLAS_INCLUDE_DIR=$PREFIX/include                                \
-    -DOpenBLAS_LIB=$PREFIX/lib/libopenblas$SHLIB_EXT                      \
-    -DWITH_EIGEN=1                                                        \
-    -DBUILD_TESTS=0                                                       \
-    -DBUILD_DOCS=0                                                        \
-    -DBUILD_PERF_TESTS=0                                                  \
-    -DBUILD_ZLIB=0                                                        \
+    -DCMAKE_CXX_FLAGS=-isystem\ ${PREFIX}/include                         \
+    -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
+    -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib                                  \
+    ${OPENMP}                                                             \
+    -DBUILD_opencv_dnn=OFF                                                \
+    -DBUILD_SHARED_LIBS=ON                                                \
+    -DCPU_BASELINE="SSE3"                                                 \
+    -DCPU_DISPATH="SSE4_1;SSE4_2;AVX;FP16;AVX2"                           \
+    -DENABLE_FAST_MATH=OFF                                                \
+    -DWITH_LAPACK=OFF                                                     \
+    -DWITH_IPP=ON                                                         \
+    -DBUILD_IPP=ON                                                        \
+    -DWITH_TBB=ON                                                         \
+    -DBUILD_TBB=OFF                                                       \
+    -DTBBROOT=${PREFIX}                                                   \
+    -DWITH_EIGEN=ON                                                       \
+    -DBUILD_TESTS=OFF                                                     \
+    -DBUILD_DOCS=OFF                                                      \
+    -DBUILD_PERF_TESTS=OFF                                                \
+    -DBUILD_ZLIB=OFF                                                      \
     -DHDF5_ROOT=${PREFIX}                                                 \
-    -DBUILD_TIFF=0                                                        \
-    -DBUILD_PNG=0                                                         \
-    -DBUILD_OPENEXR=1                                                     \
-    -DBUILD_JASPER=0                                                      \
-    -DBUILD_JPEG=0                                                        \
-    -DWITH_CUDA=0                                                         \
-    -DWITH_OPENCL=0                                                       \
-    -DWITH_OPENNI=0                                                       \
-    -DWITH_FFMPEG=1                                                       \
-    -DWITH_MATLAB=0                                                       \
-    -DWITH_VTK=0                                                          \
+    -DWITH_TIFF=ON                                                        \
+    -DBUILD_TIFF=OFF                                                      \
+    -DWITH_PNG=ON                                                         \
+    -DBUILD_PNG=OFF                                                       \
+    -DWITH_OPENEXR=ON                                                     \
+    -DBUILD_OPENEXR=ON                                                    \
+    -DWITH_JASPER=ON                                                      \
+    -DBUILD_JASPER=OFF                                                    \
+    -DWITH_WEBP=ON                                                        \
+    -DBUILD_WEBP=OFF                                                      \
+    -DWITH_JPEG=ON                                                        \
+    -DBUILD_JPEG=OFF                                                      \
+    -DJPEG_INCLUDE_DIR=${PREFIX}/include/libjpeg-turbo-prefixed           \
+    -DJPEG_LIBRARY=${PREFIX}/lib/libjpeg-turbo-prefixed/libturbojpeg.a    \
+    -DWITH_CUDA=OFF                                                       \
+    -DWITH_OPENCL=OFF                                                     \
+    -DWITH_OPENGL=OFF                                                     \
+    -DWITH_CSTRIPES=OFF                                                   \
+    -DWITH_OPENNI=OFF                                                     \
+    -DWITH_FFMPEG=ON                                                      \
+    -DWITH_GSTREAMER=OFF                                                  \
+    -DWITH_MATLAB=OFF                                                     \
+    -DWITH_VTK=OFF                                                        \
     -DWITH_QT=$QT                                                         \
-    -DWITH_GPHOTO2=0                                                      \
-    -DINSTALL_C_EXAMPLES=0                                                \
+    -DWITH_GPHOTO2=OFF                                                    \
+    -DINSTALL_C_EXAMPLES=OFF                                              \
     -DOPENCV_EXTRA_MODULES_PATH="../opencv_contrib-$PKG_VERSION/modules"  \
     -DCMAKE_SKIP_RPATH:bool=ON                                            \
     -DPYTHON_PACKAGES_PATH=${SP_DIR}                                      \
@@ -101,4 +121,24 @@ cmake -LAH                                                                \
     $PYTHON_UNSET_SP                                                      \
     ..
 
-make install -j${CPU_COUNT}
+make install --no-print-directory -j${CPU_COUNT}
+
+# Notes:
+#
+#  Do not put libs in lib64:
+#  -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib
+#
+#  TBB. Need to globally add the env include dir,
+#  otherwise tbb headers cannot be found by several modules.
+#  As of 3.4.1, OpenCV also fails to build itself TBB,
+#  and to properly transmit includes specifically to
+#  the libraries that need them.
+#  -DCMAKE_CXX_FLAGS=-isystem\ ${PREFIX}/include
+#  -DWITH_TBB=ON
+#  -DBUILD_TBB=OFF
+#  -DTBBROOT=${PREFIX}
+#
+#  Libjpeg-turbo static + symbols prefixed
+#  -DJPEG_INCLUDE_DIR=${PREFIX}/include/libjpeg-turbo-prefixed
+#  -DJPEG_LIBRARY=${PREFIX}/lib/libjpeg-turbo-prefixed/libturbojpeg.a
+

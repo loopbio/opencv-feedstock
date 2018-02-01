@@ -1,5 +1,46 @@
+#
+# Changes from conda-forge recipe:
+#
+#  - Update to 3.4.1.
+#
+#  - Disable non-linux builds.
+#
+#  - Compile with IPP and TBB.
+#
+#  - Compile against libjpeg-turbo static.
+#
+#  - Disable GStreamer.
+#    Otherwise it gets also linked to it, as it is
+#    pulled by QT. We might actually want to use
+#    this, but it is better to make sure ffmpeg
+#    is the only video backend.
+#
+#  - Disabled dnn (+ text) modules.
+#    They are big and we do not use them.
+#
+#  - Prepared to build against MKL.
+#    But disabled (commented out mkl deps here + -DWITH_LAPACK=OFF)
+#    I do not think BLAS/LAPACK are really used much out of
+#    the DNN module, and last opencv release notes do claim
+#    it does not make much difference anymore. If need to
+#    bring back, use MKL or OpenBLAS, but do not request
+#    the openblas feature.
+#
+#  - Put libs in /lib, not /lib64.
+#
+#  - Made many configuration parameters explicit in build.sh.
+#    e.g. possible optimizations like CPU instruction support
+#    or fast math, help for debugging etc.
+#
+#  - Better tests for video (seeking) and jpeg processing.
+#
+#  - List build information and linkages after success.
+#
+# There are interesting notes and links in my dear building diary.
+#
+
 {% set version = "3.4.1" %}
-{% set blas_variant = "openblas" %}
+{% set build_number= "0" %}
 
 package:
   name: opencv
@@ -9,13 +50,16 @@ source:
   fn: opencv-{{ version }}.tar.gz
   url: https://github.com/opencv/opencv/archive/{{ version }}.tar.gz
   sha256: f1b87684d75496a1054405ae3ee0b6573acaf3dad39eaf4f1d66fdd7e03dc852
+  patches:
+    # minimal patch to ensure we load our turbo header regardless of include dir order
+    # otherwise opencv is using /include with higher priority than /include/libjpeg-turbo-prefixed
+    # See: https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html and the patch source
+    - use-custom-turbo.patch
 
 build:
-  number: 200
+  number: {{ build_number }}
   # Python2.7 support dropped: https://github.com/opencv/opencv/issues/8481
-  skip: true  # [win and py27]
-  features:                    # [not win]
-    - blas_{{ blas_variant }}  # [not win]
+  skip: true  # [not linux]
 
 requirements:
   build:
@@ -32,19 +76,29 @@ requirements:
     - numpy 1.8.*   # [not (win and (py35 or py36))]
     - numpy 1.9.*   # [win and py35]
     - numpy 1.11.*  # [win and py36]
-    - hdf5 1.10.1         # [unix]
+    - hdf5 1.10.1   # [unix]
     - eigen 3.2.*
-    - jasper                       # [unix]
     - zlib 1.2.11
-    - jpeg 9*
-    - libtiff >=4.0.8,<4.0.10
-    - libwebp 0.5.*
-    - harfbuzz 1.7.*               # [unix]
+    - harfbuzz 1.7.*  # [unix]
+
+    # Play nice with libjpeg9:
+    # Avoid file clobbering and same name global symbols interposition / preemption.
+    - libjpeg-turbo 1.5.3 noclob_prefixed_0
+
     - libpng >=1.6.32,<1.6.35
-    - openblas 0.2.20|0.2.20.*     # [not win]
-    - blas 1.1 {{ blas_variant }}  # [not win]
-    - ffmpeg >=3.2.3,<3.2.6        # [not win]
-    - qt 5.6.*                     # [not osx]
+    - libwebp 0.5.*
+    # Beware, these two bring libjpeg 9* to the table
+    - libtiff >=4.0.8,<4.0.10
+    - jasper  # [unix]
+
+#    - mkl >=2018.0*
+#    - mkl-include >=2018.0*
+
+    - tbb
+
+    - ffmpeg >=3.4.2 lgpl*  # [not win]
+
+    - qt 5.6.*        # [not osx]
 
   run:
     - python
@@ -52,28 +106,45 @@ requirements:
     - numpy >=1.9   # [win and py35]
     - numpy >=1.11  # [win and py36]
     - hdf5 1.10.1         # [unix]
-    - jasper                       # [unix]
     - zlib 1.2.11
-    - jpeg 9*
-    - libwebp 0.5.*
     - harfbuzz 1.7.*               # [unix]
-    - libtiff >=4.0.8,<4.0.10
+
     - libpng >=1.6.32,<1.6.35
-    - openblas 0.2.20|0.2.20.*     # [not win]
-    - blas 1.1 {{ blas_variant }}  # [not win]
-    - ffmpeg >=3.2.3,<3.2.6        # [not win]
+    - libwebp 0.5.*
+    # Beware, these two bring libjpeg 9* to the table
+    - libtiff >=4.0.8,<4.0.10
+    - jasper  # [unix]
+
+#    - mkl >=2018.0*
+
+    - tbb
+
+    - ffmpeg >=3.4.2               # [not win]
+
     - qt 5.6.*                     # [not osx]
 
 test:
+    files:
+      - opencv_frame_hashes.json
+      - 687px-Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg
+      - ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py
+      - test_video_seek.py
+
     requires:
+      - pillow    # so we make sure there is no symbol clash libjpeg-turbo jpeg 9
       - requests
       - certifi
+      - pytest
+
     imports:
       - cv2
       - cv2.xfeatures2d
 
     commands:
+        # first some info
+        - python -c 'import cv2; print(cv2.getBuildInformation())'
         # Verify dynamic libraries on all systems
+        # "dnn", "text", removed when DNN is left out
         {% set win_ver_lib = version|replace(".", "") %}
         {% set opencv_libs = [
             "aruco",
@@ -82,7 +153,6 @@ test:
             "ccalib",
             "core",
             "datasets",
-            "dnn",
             "dpm",
             "face",
             "features2d",
@@ -107,7 +177,6 @@ test:
             "structured_light",
             "superres",
             "surface_matching",
-            "text",
             "tracking",
             "video",
             "videoio",
@@ -124,6 +193,12 @@ test:
         - test -f $PREFIX/lib/libopencv_bioinspired${SHLIB_EXT}  # [unix]
         - test -f $PREFIX/lib/libopencv_hdf${SHLIB_EXT}          # [unix]
         - test -f $PREFIX/lib/libopencv_freetype${SHLIB_EXT}     # [unix]
+        - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 0  # segfaults FTW
+        - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 1
+        - pytest test_video_seek.py
+        # last some info
+        - conda inspect linkages -p $PREFIX $PKG_NAME   # [unix]
+        - python -c 'import cv2; print(cv2.getBuildInformation())'
 
 about:
   home: http://opencv.org/
@@ -132,6 +207,8 @@ about:
 
 extra:
   recipe-maintainers:
+    - sdvillal
+  conda-forge-recipe-maintainers:
     - jakirkham
     - msarahan
     - patricksnape
