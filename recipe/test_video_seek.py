@@ -1,4 +1,6 @@
+import contextlib
 import tempfile
+import os
 import os.path as op
 import platform
 import shutil
@@ -11,6 +13,38 @@ import json
 from functools import partial
 from hashlib import sha256
 import pytest
+
+
+# --- Helpers for setting thread_count in ffmpeg based VideoCapture
+
+@contextlib.contextmanager
+def envvar(name, value=None):
+    if name not in os.environ:
+        if value is not None:
+            os.environ[name] = str(value)
+        yield
+        if value is not None:
+            del os.environ[name]
+    else:
+        old_value = os.environ[name]
+        if value is not None:
+            os.environ[name] = str(value)
+        else:
+            del os.environ[name]
+        yield
+        os.environ[name] = old_value
+
+
+def ffmpeg_thread_count(thread_count=None):
+    return envvar(name='OPENCV_FFMPEG_THREAD_COUNT', value=thread_count)
+
+
+def video_capture_thread_count(cap):
+    try:
+        # noinspection PyUnresolvedReferences
+        return cap.get(cv2.CAP_PROP_THREAD_COUNT)
+    except AttributeError:
+        return None
 
 
 # --- A watered-down video reader abstraction + a simple implementation on top of opencv
@@ -89,13 +123,14 @@ class OpenCVIsNotForVideo(Exception):
 
 class OpenCVVideoReader(VideoReader):
 
-    def __init__(self, path, seek_when='never', double_check_seek=True):
+    def __init__(self, path, seek_when='never', double_check_seek=True, num_threads=None):
         super(OpenCVVideoReader, self).__init__(path)
         self._next_frame_num = 0
         self._handle = None
         self._seek_when = seek_when
         self._num_frames = None
         self._double_check_seek = double_check_seek
+        self._num_threads = num_threads
 
     @property
     def next_frame_num(self):
@@ -154,7 +189,7 @@ class OpenCVVideoReader(VideoReader):
         else:
             must_seek = self._seek_when == 'always' and frame_num != self.next_frame_num
 
-        # Actually put the reader before the
+        # Actually put the reader before the requested frame
         if must_seek:
             self._cap.set(cv2.CAP_PROP_POS_FRAMES, frame_num)
             self._next_frame_num = frame_num
@@ -178,7 +213,8 @@ class OpenCVVideoReader(VideoReader):
     def _cap(self):
         if self._handle is None or not self._handle.isOpened():
             self.close()
-            self._handle = cv2.VideoCapture(self.path)
+            with envvar('OPENCV_FFMPEG_THREAD_COUNT', self._num_threads):
+                self._handle = cv2.VideoCapture(self.path)
             if not self._handle.isOpened():
                 raise OpenCVIsNotForVideo('OpenCV cannot open video: ', self.path)
         return self._handle
@@ -308,7 +344,10 @@ def opencv_seek_ground_truths(use_cache=True, recompute=False, do_print=False):
 readers_to_test = [
     (partial(OpenCVVideoReader, seek_when='never', double_check_seek=False), 'opencv-never-seek'),
     (partial(OpenCVVideoReader, seek_when='always', double_check_seek=False), 'opencv-always-seek'),
-    (partial(OpenCVVideoReader, seek_when=10, double_check_seek=False), 'opencv-10orbigger-seek')
+    (partial(OpenCVVideoReader, seek_when=10, double_check_seek=False), 'opencv-10orbigger-seek'),
+    (partial(OpenCVVideoReader, seek_when=10, double_check_seek=False, num_threads=2),
+     'opencv-10orbigger-seek-2threads')
+
 ]
 
 
@@ -357,12 +396,16 @@ def test_seeking(request, seek_expectations, video_reader):
         'test_seeking[opencv-always-seek-VID00003-20100701-2204.3GP-expectations=online]',
         'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.3GP-expectations=precomputed]',
         'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.3GP-expectations=online]',
+        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.3GP-expectations=precomputed]',
+        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.3GP-expectations=online]',
 
         # A lot of frames off
         'test_seeking[opencv-always-seek-VID00003-20100701-2204.avi-expectations=precomputed]',
         'test_seeking[opencv-always-seek-VID00003-20100701-2204.avi-expectations=online]',
         'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.avi-expectations=precomputed]',
         'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.avi-expectations=online]',
+        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.avi-expectations=precomputed]',
+        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.avi-expectations=online]',
 
         # A few frames off
         'test_seeking[opencv-always-seek-VID00003-20100701-2204.mpg-expectations=precomputed]',
@@ -373,6 +416,8 @@ def test_seeking(request, seek_expectations, video_reader):
         'test_seeking[opencv-always-seek-big_buck_bunny.mpg-expectations=online]',
         'test_seeking[opencv-10orbigger-seek-big_buck_bunny.mpg-expectations=precomputed]',
         'test_seeking[opencv-10orbigger-seek-big_buck_bunny.mpg-expectations=online]',
+        'test_seeking[opencv-10orbigger-seek-2threads-big_buck_bunny.mpg-expectations=precomputed]',
+        'test_seeking[opencv-10orbigger-seek-2threads-big_buck_bunny.mpg-expectations=online]',
     )
     is_known_problem = request.node.name in KNOWN_PROBLEMS
 
@@ -385,7 +430,7 @@ def test_seeking(request, seek_expectations, video_reader):
 
     # Sometimes it takes a bit to uncover errors...
     # Increase these to make tests more strict
-    num_repetitions = 10
+    num_repetitions = 5
     num_frames_per_repetition = 20
 
     with video_reader(video_path) as reader:
@@ -417,20 +462,37 @@ def test_seeking(request, seek_expectations, video_reader):
                                           request.node.name)
 
 
+@pytest.mark.skipif(platform.system() == 'Windows',
+                    reason='FFMPEG currently not built on Windows')
+def test_video_thread_count(video_path):
+
+    NON_CHANGING_CODEC_EXTENSIONS = (
+        '.wmv',
+        '.mjpg.avi',
+        '.mov'
+    )
+
+    if any(video_path.endswith(ext) for ext in NON_CHANGING_CODEC_EXTENSIONS):
+        pytest.xfail('Known codec that ignores thread settings for %r' % video_path)
+
+    # Monitor opencv default - which is quite aggresive
+    # It actually should actually be 0 (auto), or 1, or even depend on the codec
+    # (as thread_count semantics are not unified across codecs).
+    with ffmpeg_thread_count(None):
+        cap = cv2.VideoCapture(video_path)
+        assert video_capture_thread_count(cap) == os.sysconf('SC_NPROCESSORS_ONLN')
+        cap.release()
+
+    # Exercise setting and unsetting decoding thread_count
+    for thread_count in (1, 4, 8, 1):
+        with ffmpeg_thread_count(thread_count):
+            cap = cv2.VideoCapture(video_path)
+            assert video_capture_thread_count(cap) == thread_count
+            cap.release()
+
+
 if __name__ == '__main__':
     pytest.main(__file__)
 
-# We could also add some benchmark fixtures here and there, or even better, bring John's benchmarks into building
-
-#
-# Unfortunately PyAV seems a bit dead:
-#   https://github.com/mikeboers/PyAV
-#
-# ffpyplayer looks nice too, and perhaps we can just implement a frame-precise seek on top of it:
-#   https://github.com/matham/ffpyplayer
-#
-# or we can just stick to our pims-inspired PyAVReader (then we need to look for better performance)
-#
-# It is a shame we cannot trust ffmpeg seek to be frame accurate with all codec + container,
-# even if they say so: http://trac.ffmpeg.org/wiki/Seeking. For each (wrapper) library
-#
+# We could also add some benchmark fixtures here and there, or even better,
+# bring bview-loopb benchmarking into building.

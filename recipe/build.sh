@@ -57,8 +57,9 @@ cmake -LAH                                                                \
     -DCMAKE_CXX_FLAGS=-isystem\ ${PREFIX}/include                         \
     -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
     -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib                                  \
+    -DENABLE_CXX11=ON                                                     \
     ${OPENMP}                                                             \
-    -DBUILD_opencv_dnn=OFF                                                \
+    -DBUILD_opencv_dnn=ON                                                 \
     -DBUILD_SHARED_LIBS=ON                                                \
     -DCPU_BASELINE="SSE3"                                                 \
     -DCPU_DISPATH="SSE4_1;SSE4_2;AVX;FP16;AVX2"                           \
@@ -137,8 +138,13 @@ make install --no-print-directory -j${CPU_COUNT}
 #  -DWITH_TBB=ON
 #  -DBUILD_TBB=OFF
 #  -DTBBROOT=${PREFIX}
+# Alternative config for TBB
+#  -DWITH_TBB=ON
+#  -DTBB_LIB_DIR=${LIBRARY_PATH}
+#  -DTBB_INCLUDE_DIRS=${INCLUDE_PATH}
+#  -DTBB_STDDEF_PATH=${INCLUDE_PATH}/tbb/tbb_stddef.h"
+# I think it won't work, because opencv submodules do not honor these envvars
 #
 #  Libjpeg-turbo static + symbols prefixed
 #  -DJPEG_INCLUDE_DIR=${PREFIX}/include/libjpeg-turbo-prefixed
 #  -DJPEG_LIBRARY=${PREFIX}/lib/libjpeg-turbo-prefixed/libturbojpeg.a
-

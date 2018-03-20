@@ -1,22 +1,24 @@
 #
 # Changes from conda-forge recipe:
 #
-#  - Update to 3.4.1.
-#
 #  - Disable non-linux builds.
 #
-#  - Compile with IPP and TBB.
+#  - Explicitly enable C++11 on old compilers.
+#
+#  - Explicitly compile with IPP.
+#
+#  - Compile with TBB.
 #
 #  - Compile against libjpeg-turbo static.
+#
+#  - Expose thread_count in opencv video capture.
+#    Can be set with an envvar and queried via property.
 #
 #  - Disable GStreamer.
 #    Otherwise it gets also linked to it, as it is
 #    pulled by QT. We might actually want to use
 #    this, but it is better to make sure ffmpeg
 #    is the only video backend.
-#
-#  - Disabled dnn (+ text) modules.
-#    They are big and we do not use them.
 #
 #  - Prepared to build against MKL.
 #    But disabled (commented out mkl deps here + -DWITH_LAPACK=OFF)
@@ -40,7 +42,7 @@
 #
 
 {% set version = "3.4.1" %}
-{% set build_number= "0" %}
+{% set build_number= "1" %}
 
 package:
   name: opencv
@@ -53,8 +55,10 @@ source:
   patches:
     # minimal patch to ensure we load our turbo header regardless of include dir order
     # otherwise opencv is using /include with higher priority than /include/libjpeg-turbo-prefixed
-    # See: https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html and the patch source
+    # see https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html and the patch source
     - use-custom-turbo.patch
+    # allow to set the number of threads used by ffmpeg decoders
+    - expose-ffmpeg-thread-count.patch
 
 build:
   number: {{ build_number }}
@@ -153,6 +157,7 @@ test:
             "ccalib",
             "core",
             "datasets",
+            "dnn",
             "dpm",
             "face",
             "features2d",
@@ -177,6 +182,7 @@ test:
             "structured_light",
             "superres",
             "surface_matching",
+            "text",
             "tracking",
             "video",
             "videoio",
@@ -195,15 +201,16 @@ test:
         - test -f $PREFIX/lib/libopencv_freetype${SHLIB_EXT}     # [unix]
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 0  # segfaults FTW
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 1
+        - python -c 'import cv2; assert cv2.CAP_PROP_THREAD_COUNT == 5555'
         - pytest test_video_seek.py
-        # last some info
+        # lastly some info
         - conda inspect linkages -p $PREFIX $PKG_NAME   # [unix]
         - python -c 'import cv2; print(cv2.getBuildInformation())'
 
 about:
   home: http://opencv.org/
   license: BSD 3-clause
-  summary: Computer vision and machine learning software library.
+  summary: "Loopbio optimized OpenCV builds: https://github.com/loopbio/opencv-feedstock"
 
 extra:
   recipe-maintainers:

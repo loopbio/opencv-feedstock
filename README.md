@@ -7,7 +7,7 @@ Package license: BSD 3-clause
 
 Feedstock license: BSD 3-Clause
 
-Summary: Computer vision and machine learning software library.
+Summary: Loopbio optimized OpenCV builds: https://github.com/loopbio/opencv-feedstock
 
 
 

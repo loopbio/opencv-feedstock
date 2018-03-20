@@ -1,0 +1,49 @@
+diff --git a/modules/videoio/include/opencv2/videoio.hpp b/modules/videoio/include/opencv2/videoio.hpp
+index a921300e9..16f1b2dba 100644
+--- a/modules/videoio/include/opencv2/videoio.hpp
++++ b/modules/videoio/include/opencv2/videoio.hpp
+@@ -167,6 +167,7 @@ enum VideoCaptureProperties {
+        CAP_PROP_AUTOFOCUS     =39,
+        CAP_PROP_SAR_NUM       =40, //!< Sample aspect ratio: num/den (num)
+        CAP_PROP_SAR_DEN       =41, //!< Sample aspect ratio: num/den (den)
++       CAP_PROP_THREAD_COUNT = 5555,
+ #ifndef CV_DOXYGEN
+        CV__CAP_PROP_LATEST
+ #endif
+diff --git a/modules/videoio/src/cap_ffmpeg_api.hpp b/modules/videoio/src/cap_ffmpeg_api.hpp
+index 7144f4ab9..5876bacb5 100644
+--- a/modules/videoio/src/cap_ffmpeg_api.hpp
++++ b/modules/videoio/src/cap_ffmpeg_api.hpp
+@@ -25,7 +25,8 @@ enum
+     CV_FFMPEG_CAP_PROP_FOURCC=6,
+     CV_FFMPEG_CAP_PROP_FRAME_COUNT=7,
+     CV_FFMPEG_CAP_PROP_SAR_NUM=40,
+-    CV_FFMPEG_CAP_PROP_SAR_DEN=41
++    CV_FFMPEG_CAP_PROP_SAR_DEN=41,
++    CV_FFMPEG_CAP_PROP_THREAD_COUNT=5555
+ };
+ 
+ 
+diff --git a/modules/videoio/src/cap_ffmpeg_impl.hpp b/modules/videoio/src/cap_ffmpeg_impl.hpp
+index 8ca304abe..45d0bda74 100644
+--- a/modules/videoio/src/cap_ffmpeg_impl.hpp
++++ b/modules/videoio/src/cap_ffmpeg_impl.hpp
+@@ -291,6 +291,9 @@ inline double get_monotonic_time_diff_ms(timespec time1, timespec time2)
+ 
+ static int get_number_of_cpus(void)
+ {
++    char* thread_count = getenv("OPENCV_FFMPEG_THREAD_COUNT");
++    if(thread_count != NULL)
++        return std::stoi(thread_count);
+ #if LIBAVFORMAT_BUILD < CALC_FFMPEG_VERSION(52, 111, 0)
+     return 1;
+ #elif defined _WIN32
+@@ -1114,6 +1117,8 @@ double CvCapture_FFMPEG::getProperty( int property_id ) const
+         return _opencv_ffmpeg_get_sample_aspect_ratio(ic->streams[video_stream]).num;
+     case CV_FFMPEG_CAP_PROP_SAR_DEN:
+         return _opencv_ffmpeg_get_sample_aspect_ratio(ic->streams[video_stream]).den;
++    case CV_FFMPEG_CAP_PROP_THREAD_COUNT:
++        return video_st->codec->thread_count;
+     default:
+         break;
+     }
