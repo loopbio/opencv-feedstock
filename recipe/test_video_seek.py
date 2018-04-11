@@ -266,9 +266,13 @@ def compute_video_seek_expectations(video_path,
             if frame_numbers is None:
                 frame_numbers = range(len(reader))
             else:
-                frame_numbers = range(min(max(frame_numbers) + 1, len(reader)))
+                # filter out-of-video frames (maybe we should just raise)
+                max_frame_num = len(reader) - 1
+                frame_numbers = [fn for fn in frame_numbers if 0 <= fn <= max_frame_num]
 
-            for frame_num in frame_numbers:
+            frame_numbers = set(frame_numbers)
+
+            for frame_num in range(max(frame_numbers)):
                 try:
                     _, image = reader.next_frame()
                 except Exception as ex:
@@ -392,32 +396,32 @@ def test_seeking(request, seek_expectations, video_reader):
     # pytest will actually fail if these get fixed, so we can update the test
     KNOWN_PROBLEMS = (
         # A few frames off
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.3GP-expectations=precomputed]',
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.3GP-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.3GP-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.3GP-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.3GP-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.3GP-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-always-seek-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-always-seek-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-10orbigger-seek-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-10orbigger-seek-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-10orbigger-seek-2threads-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.3GP-opencv-10orbigger-seek-2threads-expectations=online]',
 
         # A lot of frames off
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.avi-expectations=precomputed]',
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.avi-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.avi-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-VID00003-20100701-2204.avi-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.avi-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-2threads-VID00003-20100701-2204.avi-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-always-seek-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-always-seek-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-10orbigger-seek-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-10orbigger-seek-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-10orbigger-seek-2threads-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.avi-opencv-10orbigger-seek-2threads-expectations=online]',
 
         # A few frames off
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.mpg-expectations=precomputed]',
-        'test_seeking[opencv-always-seek-VID00003-20100701-2204.mpg-expectations=online]',
+        'test_seeking[VID00003-20100701-2204.mpg-opencv-always-seek-expectations=precomputed]',
+        'test_seeking[VID00003-20100701-2204.mpg-opencv-always-seek-expectations=online]',
 
         # A few frames off
-        'test_seeking[opencv-always-seek-big_buck_bunny.mpg-expectations=precomputed]',
-        'test_seeking[opencv-always-seek-big_buck_bunny.mpg-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-big_buck_bunny.mpg-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-big_buck_bunny.mpg-expectations=online]',
-        'test_seeking[opencv-10orbigger-seek-2threads-big_buck_bunny.mpg-expectations=precomputed]',
-        'test_seeking[opencv-10orbigger-seek-2threads-big_buck_bunny.mpg-expectations=online]',
+        'test_seeking[big_buck_bunny.mpg-opencv-always-seek-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mpg-opencv-always-seek-expectations=online]',
+        'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-expectations=online]',
+        'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-2threads-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-2threads-expectations=online]',
     )
     is_known_problem = request.node.name in KNOWN_PROBLEMS
 
@@ -460,6 +464,48 @@ def test_seeking(request, seek_expectations, video_reader):
             # everything passed, should it not?
             assert not is_known_problem, ('problem for %r seems fixed, remove from known problems' %
                                           request.node.name)
+
+
+def individual_test_seeking(video_path,
+                            video_reader=partial(OpenCVVideoReader, seek_when='always', double_check_seek=False),
+                            seek_expectations=None, num_repetitions=10, num_frames_per_repetition=200):
+    # Seek expectations for the video
+    if not seek_expectations:
+        seek_expectations = compute_video_seek_expectations(video_path,
+                                                            frame_numbers=range(740, 760),
+                                                            remove_file=False,
+                                                            fail_if_error=True)
+    print('There are expectations for %d frames' % len(seek_expectations))
+    first_frame, last_frame = min(seek_expectations), max(seek_expectations)
+    hash2frame = {v: k for k, v in seek_expectations.items()}
+
+    with video_reader(video_path) as reader:
+        for rng_seed in range(num_repetitions):
+            print('Seed:', rng_seed)
+            # Randomize our selection of frames
+            frame2hash = list(seek_expectations.items())
+            random.Random(rng_seed).shuffle(frame2hash)
+            frame2hash = frame2hash[:num_frames_per_repetition]
+            # Always include "border" frames in the first experiment
+            if 0 == rng_seed:
+                frame2hash += [(first_frame, seek_expectations[first_frame]),
+                               (last_frame, seek_expectations[last_frame])]
+            for frame_num, frame_hash in frame2hash:
+                image = reader.frame(frame_num)
+                cv2.imwrite('/home/santi/%d-%d.jpg' % (frame_num, rng_seed), image)
+                grabbed_image_hash = hash_image(image)
+                test_pass = grabbed_image_hash == frame_hash
+                if not test_pass:
+                    actual_frame_num = hash2frame.get(grabbed_image_hash)
+                    if actual_frame_num is None:
+                        message = ('image for frame %d generates an unknown hash (%r)' %
+                                   (frame_num, video_path))
+                    else:
+                        message = ('wrong seek for frame %d (went to %d) (%r)' %
+                                   (frame_num, actual_frame_num, video_path))
+                    print('Test fails', frame_num, frame_hash, grabbed_image_hash)
+                    assert False, message
+                print('Test pass', frame_num, frame_hash)
 
 
 @pytest.mark.skipif(platform.system() == 'Windows',

@@ -49,6 +49,9 @@ PYTHON_UNSET_SP="-DPYTHON${PY_UNSET_MAJOR}_PACKAGES_PATH="
 # FFMPEG building requires pkgconfig
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig
 
+# Custom libjpeg-turbo location
+LIBJPEG_TURBO_DIR=${PREFIX}/lib/libjpeg-turbo/prefixed
+
 cmake -LAH                                                                \
     -DCMAKE_RULE_MESSAGES=ON                                              \
     -DCMAKE_VERBOSE_MAKEFILE=OFF                                          \
@@ -88,8 +91,8 @@ cmake -LAH                                                                \
     -DBUILD_WEBP=OFF                                                      \
     -DWITH_JPEG=ON                                                        \
     -DBUILD_JPEG=OFF                                                      \
-    -DJPEG_INCLUDE_DIR=${PREFIX}/include/libjpeg-turbo-prefixed           \
-    -DJPEG_LIBRARY=${PREFIX}/lib/libjpeg-turbo-prefixed/libturbojpeg.a    \
+    -DJPEG_INCLUDE_DIR=${LIBJPEG_TURBO_DIR}/include/                      \
+    -DJPEG_LIBRARY=${LIBJPEG_TURBO_DIR}/lib/libturbojpeg.a                \
     -DWITH_CUDA=OFF                                                       \
     -DWITH_OPENCL=OFF                                                     \
     -DWITH_OPENGL=OFF                                                     \
@@ -145,6 +148,6 @@ make install --no-print-directory -j${CPU_COUNT}
 #  -DTBB_STDDEF_PATH=${INCLUDE_PATH}/tbb/tbb_stddef.h"
 # I think it won't work, because opencv submodules do not honor these envvars
 #
-#  Libjpeg-turbo static + symbols prefixed
-#  -DJPEG_INCLUDE_DIR=${PREFIX}/include/libjpeg-turbo-prefixed
-#  -DJPEG_LIBRARY=${PREFIX}/lib/libjpeg-turbo-prefixed/libturbojpeg.a
+# Libjpeg-turbo static + symbols prefixed
+#  -DJPEG_INCLUDE_DIR=${LIBJPEG_TURBO_DIR}/include/
+#  -DJPEG_LIBRARY=${LIBJPEG_TURBO_DIR}/lib/libturbojpeg.a
