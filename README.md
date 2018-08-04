@@ -14,14 +14,16 @@ Summary: Loopbio optimized OpenCV builds: https://github.com/loopbio/opencv-feed
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/loopbio/opencv-vanilla-feedstock.svg?style=shield)](https://circleci.com/gh/loopbio/opencv-vanilla-feedstock)
-OSX: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+[![Linux](https://img.shields.io/circleci/project/github/loopbio/opencv-vanilla-feedstock/master.svg?label=Linux)](https://circleci.com/gh/loopbio/opencv-vanilla-feedstock)
+![OSX disabled](https://img.shields.io/badge/OSX-disabled-lightgrey.svg)
+![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/version.svg)](https://anaconda.org/loopbio/opencv)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/loopbio/opencv/badges/downloads.svg)](https://anaconda.org/loopbio/opencv)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-opencv-green.svg)](https://anaconda.org/loopbio/opencv) | [![Conda Downloads](https://img.shields.io/conda/dn/loopbio/opencv.svg)](https://anaconda.org/loopbio/opencv) | [![Conda Version](https://img.shields.io/conda/vn/loopbio/opencv.svg)](https://anaconda.org/loopbio/opencv) | [![Conda Platforms](https://img.shields.io/conda/pn/loopbio/opencv.svg)](https://anaconda.org/loopbio/opencv) |
 
 Installing opencv
 =================
