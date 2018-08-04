@@ -1,8 +1,8 @@
 diff --git a/modules/videoio/include/opencv2/videoio.hpp b/modules/videoio/include/opencv2/videoio.hpp
-index a921300e9..16f1b2dba 100644
+index d43e70398..26d5ae7e3 100644
 --- a/modules/videoio/include/opencv2/videoio.hpp
 +++ b/modules/videoio/include/opencv2/videoio.hpp
-@@ -167,6 +167,7 @@ enum VideoCaptureProperties {
+@@ -168,6 +168,7 @@ enum VideoCaptureProperties {
         CAP_PROP_AUTOFOCUS     =39,
         CAP_PROP_SAR_NUM       =40, //!< Sample aspect ratio: num/den (num)
         CAP_PROP_SAR_DEN       =41, //!< Sample aspect ratio: num/den (den)
@@ -11,7 +11,7 @@ index a921300e9..16f1b2dba 100644
         CV__CAP_PROP_LATEST
  #endif
 diff --git a/modules/videoio/src/cap_ffmpeg_api.hpp b/modules/videoio/src/cap_ffmpeg_api.hpp
-index 7144f4ab9..5876bacb5 100644
+index 216328e53..38760344f 100644
 --- a/modules/videoio/src/cap_ffmpeg_api.hpp
 +++ b/modules/videoio/src/cap_ffmpeg_api.hpp
 @@ -25,7 +25,8 @@ enum
@@ -23,9 +23,9 @@ index 7144f4ab9..5876bacb5 100644
 +    CV_FFMPEG_CAP_PROP_THREAD_COUNT=5555
  };
  
- 
+ typedef struct CvCapture_FFMPEG CvCapture_FFMPEG;
 diff --git a/modules/videoio/src/cap_ffmpeg_impl.hpp b/modules/videoio/src/cap_ffmpeg_impl.hpp
-index 8ca304abe..45d0bda74 100644
+index 9e858add0..dba9ee8ee 100644
 --- a/modules/videoio/src/cap_ffmpeg_impl.hpp
 +++ b/modules/videoio/src/cap_ffmpeg_impl.hpp
 @@ -291,6 +291,9 @@ inline double get_monotonic_time_diff_ms(timespec time1, timespec time2)
@@ -38,7 +38,7 @@ index 8ca304abe..45d0bda74 100644
  #if LIBAVFORMAT_BUILD < CALC_FFMPEG_VERSION(52, 111, 0)
      return 1;
  #elif defined _WIN32
-@@ -1114,6 +1117,8 @@ double CvCapture_FFMPEG::getProperty( int property_id ) const
+@@ -1141,6 +1144,8 @@ double CvCapture_FFMPEG::getProperty( int property_id ) const
          return _opencv_ffmpeg_get_sample_aspect_ratio(ic->streams[video_stream]).num;
      case CV_FFMPEG_CAP_PROP_SAR_DEN:
          return _opencv_ffmpeg_get_sample_aspect_ratio(ic->streams[video_stream]).den;

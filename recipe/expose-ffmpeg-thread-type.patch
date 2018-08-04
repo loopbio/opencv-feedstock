@@ -1,0 +1,67 @@
+diff --git a/modules/videoio/include/opencv2/videoio.hpp b/modules/videoio/include/opencv2/videoio.hpp
+index 26d5ae7e3..b86a4e6cc 100644
+--- a/modules/videoio/include/opencv2/videoio.hpp
++++ b/modules/videoio/include/opencv2/videoio.hpp
+@@ -169,6 +169,7 @@ enum VideoCaptureProperties {
+        CAP_PROP_SAR_NUM       =40, //!< Sample aspect ratio: num/den (num)
+        CAP_PROP_SAR_DEN       =41, //!< Sample aspect ratio: num/den (den)
+        CAP_PROP_THREAD_COUNT = 5555,
++       CAP_PROP_THREAD_TYPE = 5556,
+ #ifndef CV_DOXYGEN
+        CV__CAP_PROP_LATEST
+ #endif
+diff --git a/modules/videoio/src/cap_ffmpeg_api.hpp b/modules/videoio/src/cap_ffmpeg_api.hpp
+index 38760344f..ef9f956a3 100644
+--- a/modules/videoio/src/cap_ffmpeg_api.hpp
++++ b/modules/videoio/src/cap_ffmpeg_api.hpp
+@@ -26,7 +26,8 @@ enum
+     CV_FFMPEG_CAP_PROP_FRAME_COUNT=7,
+     CV_FFMPEG_CAP_PROP_SAR_NUM=40,
+     CV_FFMPEG_CAP_PROP_SAR_DEN=41,
+-    CV_FFMPEG_CAP_PROP_THREAD_COUNT=5555
++    CV_FFMPEG_CAP_PROP_THREAD_COUNT=5555,
++    CV_FFMPEG_CAP_PROP_THREAD_TYPE=5556
+ };
+ 
+ typedef struct CvCapture_FFMPEG CvCapture_FFMPEG;
+diff --git a/modules/videoio/src/cap_ffmpeg_impl.hpp b/modules/videoio/src/cap_ffmpeg_impl.hpp
+index dba9ee8ee..dbb243b06 100644
+--- a/modules/videoio/src/cap_ffmpeg_impl.hpp
++++ b/modules/videoio/src/cap_ffmpeg_impl.hpp
+@@ -289,6 +289,18 @@ inline double get_monotonic_time_diff_ms(timespec time1, timespec time2)
+ }
+ #endif // USE_AV_INTERRUPT_CALLBACK
+ 
++static int get_threading_type(void)
++{
++     // Frame: 1, Slice=2, Auto=Frame|Slice=3
++     // https://github.com/FFmpeg/FFmpeg/blob/5985a1bf72332e10d251ec643e100b5592285819/libavcodec/avcodec.h#L2774-L2784
++     // In general I think 1 is faster if supported by codec, 2 is a safe default, 3 is good if the cost of auto
++     // is ammortized by subsequent speedups
++    char* thread_type = getenv("OPENCV_FFMPEG_THREAD_TYPE");
++    if(thread_type != NULL)
++        return std::stoi(thread_type);
++    return -1;
++}
++
+ static int get_number_of_cpus(void)
+ {
+     char* thread_count = getenv("OPENCV_FFMPEG_THREAD_COUNT");
+@@ -883,6 +895,8 @@ bool CvCapture_FFMPEG::open( const char* _filename )
+ //        avcodec_thread_init(enc, get_number_of_cpus());
+ //#else
+         enc->thread_count = get_number_of_cpus();
++        if(get_threading_type() >= 0)
++            enc->thread_type = get_threading_type();
+ //#endif
+ 
+ #if LIBAVFORMAT_BUILD < CALC_FFMPEG_VERSION(53, 2, 0)
+@@ -1146,6 +1160,8 @@ double CvCapture_FFMPEG::getProperty( int property_id ) const
+         return _opencv_ffmpeg_get_sample_aspect_ratio(ic->streams[video_stream]).den;
+     case CV_FFMPEG_CAP_PROP_THREAD_COUNT:
+         return video_st->codec->thread_count;
++    case CV_FFMPEG_CAP_PROP_THREAD_TYPE:
++        return video_st->codec->thread_type;
+     default:
+         break;
+     }

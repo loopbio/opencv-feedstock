@@ -1,12 +1,12 @@
 diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 281b50732..542bd3351 100644
+index 434278c2a..51f8565f4 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
-@@ -19,7 +19,15 @@ if(HAVE_PNG OR HAVE_TIFF OR HAVE_OPENEXR)
+@@ -19,7 +19,14 @@ if(HAVE_PNG OR HAVE_TIFF OR HAVE_OPENEXR)
  endif()
  
  if(HAVE_JPEG)
--  ocv_include_directories(${JPEG_INCLUDE_DIR})
+-  ocv_include_directories(${JPEG_INCLUDE_DIR} ${${JPEG_LIBRARY}_BINARY_DIR})
 +
 +  #
 +  # This includes the dirs after the system, giving jpeg9 headers priority
@@ -14,8 +14,7 @@ index 281b50732..542bd3351 100644
 +  #   ocv_include_directories(${JPEG_INCLUDE_DIR})
 +  # So instead we force it to have higher priority than system include
 +  #
-+  include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR})
-+
++  include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR} ${${JPEG_LIBRARY}_BINARY_DIR})
    list(APPEND GRFMT_LIBS ${JPEG_LIBRARIES})
  endif()
  

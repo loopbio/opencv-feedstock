@@ -11,7 +11,7 @@
 #
 #  - Compile against libjpeg-turbo static.
 #
-#  - Expose thread_count in opencv video capture.
+#  - Expose thread_count and thread_type in opencv video capture.
 #    Can be set with an envvar and queried via property.
 #
 #  - Disable GStreamer.
@@ -41,24 +41,29 @@
 # There are interesting notes and links in my dear building diary.
 #
 
-{% set version = "3.4.1" %}
-{% set build_number= "2" %}
+{% set version = "3.4.2" %}
+{% set build_number= "0" %}
 
 package:
   name: opencv
   version: {{ version }}
 
 source:
-  fn: opencv-{{ version }}.tar.gz
-  url: https://github.com/opencv/opencv/archive/{{ version }}.tar.gz
-  sha256: f1b87684d75496a1054405ae3ee0b6573acaf3dad39eaf4f1d66fdd7e03dc852
-  patches:
-    # minimal patch to ensure we load our turbo header regardless of include dir order
-    # otherwise opencv is using /include with higher priority than /include/libjpeg-turbo-prefixed
-    # see https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html and the patch source
-    - use-custom-turbo.patch
-    # allow to set the number of threads used by ffmpeg decoders
-    - expose-ffmpeg-thread-count.patch
+  - url: https://github.com/opencv/opencv/archive/{{ version }}.tar.gz
+    fn: opencv-{{ version }}.tar.gz
+    sha256: 81dbd5e7e9f8a4c936b94629bf4765745942a1d634ae38ec08bc57b73b28ffc5
+    patches:
+      # minimal patch to ensure we load our turbo header regardless of include dir order
+      # otherwise opencv is using /include with higher priority than /include/libjpeg-turbo-prefixed
+      # see https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html and the patch source
+      - use-custom-turbo.patch
+      # allow to set the number of threads and threading type used by ffmpeg decoders
+      - expose-ffmpeg-thread-count.patch
+      - expose-ffmpeg-thread-type.patch
+  - url: https://github.com/opencv/opencv_contrib/archive/{{ version }}.tar.gz
+    fn: opencv_contrib-{{ version }}.tar.gz
+    sha256: 45a52764ebd2558fa0b7fd8dc47379b37dd0956d912abbf7c786228374fdf60d
+    folder: opencv_contrib-{{ version }}
 
 build:
   number: {{ build_number }}
@@ -67,65 +72,43 @@ build:
 
 requirements:
   build:
-    - python
-    - toolchain
-    - pkgconfig                    # [unix]
-    # For sha256 comparisons of opencv_contrib
-    - openssl 1.0.*                # [unix]
-    # For downloading opencv_contrib
-    - curl >=7.44.0,<8
-    # For applying patches
-    - git                          # [win]
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - cmake
-    - numpy 1.8.*   # [not (win and (py35 or py36))]
-    - numpy 1.9.*   # [win and py35]
-    - numpy 1.11.*  # [win and py36]
-    - hdf5 1.10.1   # [unix]
+  host:
+    - python
+    - pkgconfig  # [unix]
+    - numpy
+    - hdf5
     - eigen 3.2.*
-    - zlib 1.2.11
-    - harfbuzz 1.7.*  # [unix]
-
+    - zlib
+    - harfbuzz  # [unix]
     # Play nice with libjpeg9:
     # Avoid file clobbering and same name global symbols interposition / preemption.
-    - libjpeg-turbo 1.5.90 noclob_prefixed_gcc48_0
-
-    - libpng >=1.6.32,<1.6.35
-    - libwebp 0.5.*
-    # Beware, these two bring libjpeg 9* to the table
-    - libtiff >=4.0.8,<4.0.10
+    - libjpeg-turbo 2.0.0 noclob_prefixed_gcc48_0
+    - libpng
+    - libwebp
+    - libtiff
     - jasper  # [unix]
-
-#    - mkl >=2018.0*
-#    - mkl-include >=2018.0*
-
-    - tbb
-
-    - ffmpeg >=3.4.2 lgpl*  # [not win]
-
-    - qt 5.6.*        # [not osx]
-
+  # - mkl >=2018.0*
+  # - mkl-include >=2018.0*
+    - tbb 2018.0.*
+    - ffmpeg 4.0.* lgpl*  # [not win]
+    - qt                  # [not osx]
   run:
     - python
-    - numpy >=1.8   # [not (win and (py35 or py36))]
-    - numpy >=1.9   # [win and py35]
-    - numpy >=1.11  # [win and py36]
-    - hdf5 1.10.1         # [unix]
-    - zlib 1.2.11
-    - harfbuzz 1.7.*               # [unix]
-
-    - libpng >=1.6.32,<1.6.35
-    - libwebp 0.5.*
-    # Beware, these two bring libjpeg 9* to the table
-    - libtiff >=4.0.8,<4.0.10
+    - {{ pin_compatible('numpy') }}
+    - hdf5      # [unix]
+    - zlib
+    - harfbuzz  # [unix]
+    - libpng
+    - libwebp
+    - libtiff
     - jasper  # [unix]
-
-#    - mkl >=2018.0*
-
-    - tbb
-
-    - ffmpeg >=3.4.2               # [not win]
-
-    - qt 5.6.*                     # [not osx]
+  # - mkl >=2018.0*
+    - tbb 2018.0.*
+    - ffmpeg 4.0.*  # [not win]
+    - qt            # [not osx]
 
 test:
     files:
@@ -153,6 +136,7 @@ test:
         {% set opencv_libs = [
             "aruco",
             "bgsegm",
+            "bioinspired",
             "calib3d",
             "ccalib",
             "core",
@@ -162,7 +146,9 @@ test:
             "face",
             "features2d",
             "flann",
+            "freetype",
             "fuzzy",
+            "hdf",
             "highgui",
             "imgcodecs",
             "imgproc",
