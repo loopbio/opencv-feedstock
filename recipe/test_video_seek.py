@@ -422,6 +422,12 @@ def test_seeking(request, seek_expectations, video_reader):
         'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-expectations=online]',
         'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-2threads-expectations=precomputed]',
         'test_seeking[big_buck_bunny.mpg-opencv-10orbigger-seek-2threads-expectations=online]',
+
+        # Generates unknow hashes
+        'test_seeking[big_buck_bunny.mjpg.avi-opencv-never-seek-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mjpg.avi-opencv-always-seek-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mjpg.avi-opencv-10orbigger-seek-2threads-expectations=precomputed]',
+        'test_seeking[big_buck_bunny.mjpg.avi-opencv-10orbigger-seek-expectations=precomputed]',
     )
     is_known_problem = request.node.name in KNOWN_PROBLEMS
 

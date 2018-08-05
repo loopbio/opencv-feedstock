@@ -69,6 +69,8 @@ build:
   number: {{ build_number }}
   # Python2.7 support dropped: https://github.com/opencv/opencv/issues/8481
   skip: true  # [not linux]
+  ignore_run_exports:
+    - libjpeg-turbo
 
 requirements:
   build:
@@ -83,8 +85,8 @@ requirements:
     - eigen 3.2.*
     - zlib
     - harfbuzz  # [unix]
-    # Play nice with libjpeg9:
-    # Avoid file clobbering and same name global symbols interposition / preemption.
+    # libjpeg-turbo playing nice with libjpeg9:
+    # (avoid file clobbering and same name global symbols interposition / preemption)
     - libjpeg-turbo 2.0.0 noclob_prefixed_gcc48_0
     - libpng
     - libwebp
@@ -107,7 +109,7 @@ requirements:
     - jasper  # [unix]
   # - mkl >=2018.0*
     - tbb 2018.0.*
-    - ffmpeg 4.0.*  # [not win]
+  # - ffmpeg 4.0.*  # [not win]
     - qt            # [not osx]
 
 test:
@@ -188,6 +190,7 @@ test:
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 0  # segfaults FTW
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 1
         - python -c 'import cv2; assert cv2.CAP_PROP_THREAD_COUNT == 5555'
+        - python -c 'import cv2; assert cv2.CAP_PROP_THREAD_TYPE == 5556'
         - pytest test_video_seek.py
         # lastly some info
         - conda inspect linkages -p $PREFIX $PKG_NAME   # [unix]
