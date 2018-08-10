@@ -28,8 +28,8 @@ nrepeats = 20
 # If this works, we have been able to hide the symbols
 s = time.time()
 for _ in range(nrepeats):
-   img1 = Image.open(img_path)
-   img1.save(tempfile.mktemp(suffix='-pil.jpg'), quality=90)
+    img1 = Image.open(img_path)
+    img1.save(tempfile.mktemp(suffix='-pil.jpg'), quality=90)
 pil_s = time.time() - s
 
 # If this works, we have been able to compile properlly against turbo

@@ -42,7 +42,7 @@
 #
 
 {% set version = "3.4.2" %}
-{% set build_number= "0" %}
+{% set build_number= "1" %}
 
 package:
   name: opencv
@@ -94,9 +94,9 @@ requirements:
     - jasper  # [unix]
   # - mkl >=2018.0*
   # - mkl-include >=2018.0*
-    - tbb 2018.0.*
-    - ffmpeg 4.0.* lgpl*  # [not win]
-    - qt                  # [not osx]
+    - tbb-devel 2018.0.*
+    - ffmpeg 4.0.* nonvidia_lgpl*  # [not win]
+    - qt                           # [not osx]
   run:
     - python
     - {{ pin_compatible('numpy') }}
@@ -117,6 +117,7 @@ test:
       - opencv_frame_hashes.json
       - 687px-Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg
       - ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py
+      - ensure_build_features.py
       - test_video_seek.py
 
     requires:
@@ -184,9 +185,7 @@ test:
         - test -f $PREFIX/lib/libopencv_{{ each_opencv_lib }}${SHLIB_EXT}                  # [unix]
         - if not exist %PREFIX%\\Library\\bin\\opencv_{{ each_opencv_lib }}{{ win_ver_lib }}.dll exit 1  # [win]
         {% endfor %}
-        - test -f $PREFIX/lib/libopencv_bioinspired${SHLIB_EXT}  # [unix]
-        - test -f $PREFIX/lib/libopencv_hdf${SHLIB_EXT}          # [unix]
-        - test -f $PREFIX/lib/libopencv_freetype${SHLIB_EXT}     # [unix]
+        - python ensure_build_features.py
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 0  # segfaults FTW
         - python ensure_jpegturbo_opencv_plays_nicely_with_jpeg9.py 1
         - python -c 'import cv2; assert cv2.CAP_PROP_THREAD_COUNT == 5555'

@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 
 set +x
-SHORT_OS_STR=$(uname -s)
-
-QT="5"
-if [ "${SHORT_OS_STR:0:5}" == "Linux" ]; then
-    OPENMP="-DWITH_OPENMP=ON"  # Although hopefully using TBB here
-fi
-if [ "${SHORT_OS_STR}" == "Darwin" ]; then
-    OPENMP=""
-    QT="0"
-fi
 
 mkdir -p build
 cd build
@@ -57,7 +47,7 @@ cmake -LAH                                                                \
     -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
     -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib                                  \
     -DENABLE_CXX11=ON                                                     \
-    ${OPENMP}                                                             \
+    -DWITH_OPENMP=OFF                                                     \
     -DBUILD_opencv_dnn=ON                                                 \
     -DBUILD_SHARED_LIBS=ON                                                \
     -DCPU_BASELINE="SSE3"                                                 \
@@ -98,7 +88,7 @@ cmake -LAH                                                                \
     -DWITH_GSTREAMER=OFF                                                  \
     -DWITH_MATLAB=OFF                                                     \
     -DWITH_VTK=OFF                                                        \
-    -DWITH_QT=$QT                                                         \
+    -DWITH_QT=5                                                           \
     -DWITH_GPHOTO2=OFF                                                    \
     -DINSTALL_C_EXAMPLES=OFF                                              \
     -DOPENCV_EXTRA_MODULES_PATH="../opencv_contrib-$PKG_VERSION/modules"  \
