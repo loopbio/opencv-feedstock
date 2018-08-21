@@ -51,7 +51,10 @@ cmake -LAH                                                                \
     -DBUILD_opencv_dnn=ON                                                 \
     -DBUILD_SHARED_LIBS=ON                                                \
     -DCPU_BASELINE="SSE3"                                                 \
-    -DCPU_DISPATH="SSE4_1;SSE4_2;AVX;FP16;AVX2"                           \
+    -DCPU_DISPATH="SSE4_1;SSE4_2;AVX;FP16;FMA3;AVX2;AVX_512F;AVX_512SKX"  \
+    -DCPU_BASELINE_DISABLE=SSE3                                           \
+    -DCPU_BASELINE_REQUIRE=SSE2                                           \
+    -DCV_DISABLE_OPTIMIZATION=OFF                                         \
     -DENABLE_FAST_MATH=OFF                                                \
     -DWITH_LAPACK=OFF                                                     \
     -DWITH_IPP=ON                                                         \
@@ -137,3 +140,8 @@ make install --no-print-directory -j${CPU_COUNT}
 # Libjpeg-turbo static + symbols prefixed
 #  -DJPEG_INCLUDE_DIR=${LIBJPEG_TURBO_DIR}/include/
 #  -DJPEG_LIBRARY=${LIBJPEG_TURBO_DIR}/lib/libturbojpeg.a
+#
+# CPU optimizations:
+#   https://github.com/opencv/opencv/blob/master/cmake/OpenCVCompilerOptimizations.cmake
+#   https://github.com/opencv/opencv/wiki/CPU-optimizations-build-options
+# Maybe one day AVX512 will also by dyndispatched...
