@@ -49,6 +49,9 @@ cmake -LAH                                                                \
     -DENABLE_CXX11=ON                                                     \
     -DWITH_OPENMP=OFF                                                     \
     -DBUILD_opencv_dnn=ON                                                 \
+    -DWITH_PROTOBUF=ON                                                    \
+    -DBUILD_PROTOBUF=ON                                                   \
+    -DPROTOBUF_UPDATE_FILES=OFF                                           \
     -DBUILD_SHARED_LIBS=ON                                                \
     -DCPU_BASELINE="SSE3"                                                 \
     -DCPU_DISPATH="SSE4_1;SSE4_2;AVX;FP16;FMA3;AVX2;AVX_512F;AVX_512SKX"  \
@@ -145,3 +148,7 @@ make install --no-print-directory -j${CPU_COUNT}
 #   https://github.com/opencv/opencv/blob/master/cmake/OpenCVCompilerOptimizations.cmake
 #   https://github.com/opencv/opencv/wiki/CPU-optimizations-build-options
 # Maybe one day AVX512 will also by dyndispatched...
+#
+# Protobuf fun stuff:
+#   https://github.com/opencv/opencv/issues/10021
+#

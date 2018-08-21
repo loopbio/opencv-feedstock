@@ -11,6 +11,10 @@
 #
 #  - Compile against libjpeg-turbo static.
 #
+#  - Use installed protobuf instead of compile it
+#    (although this is still a liability and we should probably
+#    just stop building the DNN module that remains unused for us).
+#
 #  - Expose thread_count and thread_type in opencv video capture.
 #    Can be set with an envvar and queried via property.
 #
@@ -42,7 +46,7 @@
 #
 
 {% set version = "3.4.2" %}
-{% set build_number= "1" %}
+{% set build_number= "2" %}
 
 package:
   name: opencv
@@ -97,6 +101,7 @@ requirements:
     - tbb-devel 2018.0.*
     - ffmpeg 4.0.* nonvidia_lgpl*  # [not win]
     - qt                           # [not osx]
+    - protobuf  # N.B. current pin for TF is >=3.4.0, we let CF pin to float here
   run:
     - python
     - {{ pin_compatible('numpy') }}
@@ -111,6 +116,7 @@ requirements:
     - tbb 2018.0.*
   # - ffmpeg 4.0.*  # [not win]
     - qt            # [not osx]
+    - protobuf  # N.B. current pin for TF is >=3.4.0, we let CF pin to float here
 
 test:
     files:
