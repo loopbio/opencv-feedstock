@@ -1,8 +1,8 @@
 diff --git a/modules/videoio/include/opencv2/videoio.hpp b/modules/videoio/include/opencv2/videoio.hpp
-index 26d5ae7e3..b86a4e6cc 100644
+index 4221ab9b9..8bbfe00da 100644
 --- a/modules/videoio/include/opencv2/videoio.hpp
 +++ b/modules/videoio/include/opencv2/videoio.hpp
-@@ -169,6 +169,7 @@ enum VideoCaptureProperties {
+@@ -170,6 +170,7 @@ enum VideoCaptureProperties {
         CAP_PROP_SAR_NUM       =40, //!< Sample aspect ratio: num/den (num)
         CAP_PROP_SAR_DEN       =41, //!< Sample aspect ratio: num/den (den)
         CAP_PROP_THREAD_COUNT = 5555,
@@ -25,7 +25,7 @@ index 38760344f..ef9f956a3 100644
  
  typedef struct CvCapture_FFMPEG CvCapture_FFMPEG;
 diff --git a/modules/videoio/src/cap_ffmpeg_impl.hpp b/modules/videoio/src/cap_ffmpeg_impl.hpp
-index dba9ee8ee..5a40e8030 100644
+index d452c049c..8a2229634 100644
 --- a/modules/videoio/src/cap_ffmpeg_impl.hpp
 +++ b/modules/videoio/src/cap_ffmpeg_impl.hpp
 @@ -289,6 +289,16 @@ inline double get_monotonic_time_diff_ms(timespec time1, timespec time2)

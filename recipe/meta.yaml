@@ -45,8 +45,8 @@
 # There are interesting notes and links in my dear building diary.
 #
 
-{% set version = "3.4.2" %}
-{% set build_number= "2" %}
+{% set version = "3.4.3" %}
+{% set build_number= "0" %}
 
 package:
   name: opencv
@@ -55,7 +55,7 @@ package:
 source:
   - url: https://github.com/opencv/opencv/archive/{{ version }}.tar.gz
     fn: opencv-{{ version }}.tar.gz
-    sha256: 81dbd5e7e9f8a4c936b94629bf4765745942a1d634ae38ec08bc57b73b28ffc5
+    sha256: 4eef85759d5450b183459ff216b4c0fa43e87a4f6aa92c8af649f89336f002ec
     patches:
       # minimal patch to ensure we load our turbo header regardless of include dir order
       # otherwise opencv is using /include with higher priority than /include/libjpeg-turbo-prefixed
@@ -66,7 +66,7 @@ source:
       - expose-ffmpeg-thread-type.patch
   - url: https://github.com/opencv/opencv_contrib/archive/{{ version }}.tar.gz
     fn: opencv_contrib-{{ version }}.tar.gz
-    sha256: 45a52764ebd2558fa0b7fd8dc47379b37dd0956d912abbf7c786228374fdf60d
+    sha256: 6dfb51326f3dfeb659128df952edecd45683626a965aa4a8e1e9c970c40fb636
     folder: opencv_contrib-{{ version }}
 
 build:

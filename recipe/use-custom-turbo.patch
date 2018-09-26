@@ -19,7 +19,7 @@ index 434278c2a..51f8565f4 100644
  endif()
  
 diff --git a/modules/imgcodecs/src/grfmt_jpeg.cpp b/modules/imgcodecs/src/grfmt_jpeg.cpp
-index f53550a0f..d2bd7c2e6 100644
+index 917c72eae..88358626b 100644
 --- a/modules/imgcodecs/src/grfmt_jpeg.cpp
 +++ b/modules/imgcodecs/src/grfmt_jpeg.cpp
 @@ -72,7 +72,7 @@ typedef unsigned char boolean;
