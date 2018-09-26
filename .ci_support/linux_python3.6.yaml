@@ -1,11 +1,17 @@
 c_compiler:
 - toolchain_c
+channel_sources:
+- loopbio,conda-forge,defaults
+channel_targets:
+- loopbio main
 cxx_compiler:
 - toolchain_cxx
+docker_image:
+- condaforge/linux-anvil
 harfbuzz:
 - '1'
 hdf5:
-- 1.10.2
+- 1.10.3
 jasper:
 - 1.900.1
 libpng:
