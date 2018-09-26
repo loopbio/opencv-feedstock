@@ -81,9 +81,9 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake
+    - pkg-config  # [not win]
   host:
     - python
-    - pkgconfig  # [unix]
     - numpy
     - hdf5
     - eigen 3.2.*
