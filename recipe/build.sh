@@ -48,6 +48,7 @@ cmake -LAH                                                                \
     -DCMAKE_INSTALL_LIBDIR=lib                                            \
     -DENABLE_CXX11=ON                                                     \
     -DWITH_OPENMP=OFF                                                     \
+    -DOPENCV_ENABLE_NONFREE=ON                                            \
     -DBUILD_opencv_dnn=ON                                                 \
     -DWITH_PROTOBUF=ON                                                    \
     -DBUILD_PROTOBUF=ON                                                   \

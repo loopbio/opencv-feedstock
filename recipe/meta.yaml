@@ -11,6 +11,9 @@
 #
 #  - Compile against libjpeg-turbo static.
 #
+#  - Enables opencv non-free (SIFT, SURF...)
+#    Use at your own risk(tm).
+#
 #  - Use installed protobuf instead of compile it
 #    (although this is still a liability and we should probably
 #    just stop building the DNN module that remains unused for us).
@@ -46,7 +49,7 @@
 #
 
 {% set version = "3.4.3" %}
-{% set build_number= "0" %}
+{% set build_number= "1" %}
 
 package:
   name: opencv
