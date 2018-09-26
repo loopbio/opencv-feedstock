@@ -45,7 +45,7 @@ cmake -LAH                                                                \
     -DCMAKE_INSTALL_PREFIX=${PREFIX}                                      \
     -DCMAKE_CXX_FLAGS=-isystem\ ${PREFIX}/include                         \
     -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
-    -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib                                  \
+    -DCMAKE_INSTALL_LIBDIR=lib                                            \
     -DENABLE_CXX11=ON                                                     \
     -DWITH_OPENMP=OFF                                                     \
     -DBUILD_opencv_dnn=ON                                                 \
