@@ -88,7 +88,7 @@ requirements:
   host:
     - python
     - numpy
-    - hdf5 1.10.2
+    - hdf5 1.10.2  # [unix]
     - eigen 3.2.*
     - zlib
     - harfbuzz  # [unix]
