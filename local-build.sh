@@ -1,4 +1,8 @@
 #!/bin/bash
+# This will build selected package variants.
+# docker and conda-smithy should be available
+# When built, one can manually upload a package like:
+#   anaconda upload -u loopbio build_artefacts/linux64/opencv-whatever.tar.bz2
 
 # Can run from anywhere...
 pushd `dirname $0` > /dev/null
