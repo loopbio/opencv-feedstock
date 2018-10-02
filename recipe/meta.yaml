@@ -88,7 +88,7 @@ requirements:
   host:
     - python
     - numpy
-    - hdf5
+    - hdf5 1.10.2
     - eigen 3.2.*
     - zlib
     - harfbuzz  # [unix]
@@ -108,7 +108,7 @@ requirements:
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - hdf5      # [unix]
+    - hdf5 1.10.2   # [unix]
     - zlib
     - harfbuzz  # [unix]
     - libpng
