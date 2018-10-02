@@ -9,5 +9,5 @@ popd > /dev/null
 CONFIG="linux_python2.7" ${myDir}/.circleci/run_docker_build.sh
 CONFIG="linux_python3.6" ${myDir}/.circleci/run_docker_build.sh
 
-# Clearn cruft
+# Clean cruft
 rm -f ${myDir}/.ci_support/clobber_*
