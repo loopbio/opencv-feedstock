@@ -88,6 +88,8 @@ requirements:
   host:
     - python
     - numpy
+    # FIXME: remove non conda-forge hdf5 pin when h5py gets up to date with conda-forge pinning itself
+    # See: https://github.com/loopbio/opencv-feedstock/issues/17
     - hdf5 1.10.2  # [unix]
     - eigen 3.2.*
     - zlib
@@ -108,6 +110,8 @@ requirements:
   run:
     - python
     - {{ pin_compatible('numpy') }}
+    # FIXME: remove non conda-forge hdf5 pin when h5py gets up to date with conda-forge pinning itself
+    # See: https://github.com/loopbio/opencv-feedstock/issues/17
     - hdf5 1.10.2   # [unix]
     - zlib
     - harfbuzz  # [unix]
