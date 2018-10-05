@@ -9,6 +9,9 @@ pushd `dirname $0` > /dev/null
 myDir=`pwd`
 popd > /dev/null
 
+# Ensure the build image is up to date
+docker pull condaforge/linux-anvil
+
 # Build package variants
 CONFIG="linux_python2.7" ${myDir}/.circleci/run_docker_build.sh
 CONFIG="linux_python3.6" ${myDir}/.circleci/run_docker_build.sh
